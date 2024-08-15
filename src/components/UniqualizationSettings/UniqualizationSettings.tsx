@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useImageStore } from "../../store/ImageStore";
 import { UniqualizationSettingsForm } from "../../types";
 import CopiesAndFolderStructure from "./CopiesAndFolderStructure";

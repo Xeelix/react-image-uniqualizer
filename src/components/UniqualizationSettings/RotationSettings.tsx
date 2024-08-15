@@ -11,8 +11,8 @@ interface RotationSettingsProps {
 const RotationSettings: React.FC<RotationSettingsProps> = ({ control }) => {
   return (
     <div className='grid grid-cols-5 gap-6 items-center'>
-      <div>
-        <div className='flex justify-start gap-1'>
+      <div className='flex flex-col gap-1'>
+        <div className='flex justify-start gap-3'>
           <Controller
             control={control}
             name='rotation.enabled'
@@ -20,9 +20,9 @@ const RotationSettings: React.FC<RotationSettingsProps> = ({ control }) => {
               <CustomCheckbox checked={field.value} onChange={field.onChange} />
             )}
           />
-          <label className='text-sm font-medium'>Поворот:</label>
+          <label className='text-sm'>Поворот:</label>
         </div>
-        <label className='text-sm font-medium text-gray-500'>
+        <label className='text-sm text-gray-400'>
           Угол поворота картинки
         </label>
       </div>
