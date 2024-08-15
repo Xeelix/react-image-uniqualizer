@@ -15,6 +15,8 @@ import ContrastSettings from "./ContrastSettings";
 import { applyContrast } from "../../utils/applyContrast";
 import ReflectionSettings from "./ReflectionSettings";
 import { applyReflection } from "../../utils/applyReflection";
+import NoiseSettings from "./NoiseSettings";
+import { applyNoise } from "../../utils/applyNoise";
 
 const UniqualizationSettings: React.FC = () => {
   const { images, setSettings, updateProcessedImage } = useImageStore();
@@ -64,9 +66,12 @@ const UniqualizationSettings: React.FC = () => {
 
     const contrastedImage = await applyContrast(brightenedImg, data);
     const contrastedImg = await loadImage(contrastedImage);
-  
+
     const reflectedImage = await applyReflection(contrastedImg, data);
-    return reflectedImage;
+    const reflectedImg = await loadImage(reflectedImage);
+
+    const noisyImage = await applyNoise(reflectedImg, data);
+    return noisyImage;
   };
 
   const onSubmit = async (data: UniqualizationSettingsForm) => {
@@ -88,6 +93,7 @@ const UniqualizationSettings: React.FC = () => {
       <BrightnessSettings control={control} />
       <ContrastSettings control={control} />
       <ReflectionSettings control={control} />
+      <NoiseSettings control={control} />
 
       <button type='submit'>Submit</button>
     </form>

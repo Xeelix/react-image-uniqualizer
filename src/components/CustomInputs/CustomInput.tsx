@@ -28,8 +28,9 @@ export const CustomInput: React.FC<InputProps> = ({
     if (inputType === 'number') {
       const numValue = parseFloat(newValue);
       if (!isNaN(numValue) && numValue >= min && numValue <= max) {
-        setInputValue(numValue.toString());
-        onChange(numValue);
+        const roundedValue = Math.round(numValue * 10) / 10;
+        setInputValue(roundedValue.toString());
+        onChange(roundedValue);
       } else if (newValue === '' || newValue === '-') {
         setInputValue(newValue);
       }
@@ -45,7 +46,8 @@ export const CustomInput: React.FC<InputProps> = ({
       if (inputType === 'number') {
         const numValue = parseFloat(inputValue);
         if (!isNaN(numValue) && numValue >= min && numValue <= max) {
-          onChange(numValue);
+          const roundedValue = Math.round(numValue * 10) / 10;
+          onChange(roundedValue);
         } else {
           setInputValue(value.toString());
         }
@@ -57,8 +59,9 @@ export const CustomInput: React.FC<InputProps> = ({
     if (inputType === 'number') {
       const currentValue = typeof value === 'number' ? value : parseFloat(value as string);
       const newValue = Math.min(currentValue + step, max);
-      setInputValue(newValue.toString());
-      onChange(newValue);
+      const roundedValue = Math.round(newValue * 10) / 10;
+      setInputValue(roundedValue.toString());
+      onChange(roundedValue);
     }
   };
 
@@ -66,8 +69,9 @@ export const CustomInput: React.FC<InputProps> = ({
     if (inputType === 'number') {
       const currentValue = typeof value === 'number' ? value : parseFloat(value as string);
       const newValue = Math.max(currentValue - step, min);
-      setInputValue(newValue.toString());
-      onChange(newValue);
+      const roundedValue = Math.round(newValue * 10) / 10;
+      setInputValue(roundedValue.toString());
+      onChange(roundedValue);
     }
   };
 
