@@ -9,6 +9,10 @@ import { applyRotation } from "../../utils/applyRotation";
 import { applyCrop } from "../../utils/applyCrop";
 import SaturationSettings from "./SaturationSettings";
 import { applySaturation } from "../../utils/applySaturation";
+import BrightnessSettings from "./BrightnessSettings";
+import { applyBrightness } from "../../utils/applyBrightness";
+import ContrastSettings from "./ContrastSettings";
+import { applyContrast } from "../../utils/applyContrast";
 
 const UniqualizationSettings: React.FC = () => {
   const { images, setSettings, updateProcessedImage } = useImageStore();
@@ -24,8 +28,8 @@ const UniqualizationSettings: React.FC = () => {
       rotation: { enabled: true, min: -3, max: 3 },
       crop: { enabled: true, side: "random", min: 1, max: 3 },
       saturation: { enabled: true, min: 2, max: 20 },
-      brightness: { enabled: true, min: 90, max: 110 },
-      contrast: { enabled: true, min: 90, max: 110 },
+      brightness: { enabled: true, min: 2, max: 20 },
+      contrast: { enabled: true, min: 2, max: 20 },
       reflection: "none",
       noise: { enabled: true, max: 0.1 },
       metadata: true,
@@ -48,7 +52,13 @@ const UniqualizationSettings: React.FC = () => {
     const croppedImg = await loadImage(croppedImage);
 
     const saturatedImage = await applySaturation(croppedImg, data);
-    return saturatedImage;
+    const saturatedImg = await loadImage(saturatedImage);
+
+    const brightenedImage = await applyBrightness(saturatedImg, data);
+    const brightenedImg = await loadImage(brightenedImage);
+
+    const contrastedImage = await applyContrast(brightenedImg, data);
+    return contrastedImage;
   };
 
   const onSubmit = async (data: UniqualizationSettingsForm) => {
@@ -67,6 +77,8 @@ const UniqualizationSettings: React.FC = () => {
       <RotationSettings control={control} />
       <CropSettings control={control} />
       <SaturationSettings control={control} />
+      <BrightnessSettings control={control} />
+      <ContrastSettings control={control} />
 
       <button type='submit'>Submit</button>
     </form>

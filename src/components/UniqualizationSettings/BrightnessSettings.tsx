@@ -4,62 +4,62 @@ import { UniqualizationSettingsForm } from "../../types";
 import { CustomInput } from "../CustomInputs/CustomInput";
 import { CustomCheckbox } from "../CustomInputs/CustomCheckbox";
 
-interface RotationSettingsProps {
+interface BrightnessSettingsProps {
   control: Control<UniqualizationSettingsForm>;
 }
 
-const RotationSettings: React.FC<RotationSettingsProps> = ({ control }) => {
+const BrightnessSettings: React.FC<BrightnessSettingsProps> = ({ control }) => {
   return (
     <div className='grid grid-cols-5 gap-6 items-center'>
       <div className='flex flex-col gap-1'>
         <div className='flex justify-start gap-3'>
           <Controller
             control={control}
-            name='rotation.enabled'
+            name='brightness.enabled'
             render={({ field }) => (
               <CustomCheckbox checked={field.value} onChange={field.onChange} />
             )}
           />
-          <label className='text-sm'>Поворот:</label>
+          <label className='text-sm'>Яркость:</label>
         </div>
         <label className='text-sm text-gray-400'>
-          Угол поворота картинки
+          Выберите значение от 0 до 200
         </label>
       </div>
 
       <Controller
         control={control}
-        name='rotation.min'
+        name='brightness.min'
         render={({ field }) => (
           <CustomInput
             inputType='number'
             value={field.value}
             onChange={field.onChange}
-            min={-100}
-            max={100}
+            min={0}
+            max={200}
           />
         )}
       />
 
       <Controller
         control={control}
-        name='rotation.max'
+        name='brightness.max'
         render={({ field }) => (
           <CustomInput
             inputType='number'
             value={field.value}
             onChange={field.onChange}
-            min={-100}
-            max={100}
+            min={0}
+            max={200}
           />
         )}
       />
 
       <label className='col-span-2 text-sm text-gray-400'>
-        Поворот лучше совершать на 1-2 градуса
+        Рекомендуется устанавливать значение от 80 до 120
       </label>
     </div>
   );
 };
 
-export default RotationSettings;
+export default BrightnessSettings;
