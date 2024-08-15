@@ -1,11 +1,13 @@
-import { create } from 'zustand';
-import { ImagePairInterface } from '../types';
+import { create } from "zustand";
+import { ImagePairInterface, UniqualizationSettingsForm } from "../types";
 
 interface ImageStore {
   images: ImagePairInterface[];
   currentIndex: number;
   setImages: (images: ImagePairInterface[]) => void;
   setCurrentIndex: (index: number) => void;
+  settings: UniqualizationSettingsForm | null;
+  setSettings: (settings: UniqualizationSettingsForm) => void;
 }
 
 export const useImageStore = create<ImageStore>((set) => ({
@@ -13,4 +15,6 @@ export const useImageStore = create<ImageStore>((set) => ({
   currentIndex: 0,
   setImages: (images) => set({ images }),
   setCurrentIndex: (index) => set({ currentIndex: index }),
+  settings: null,
+  setSettings: (settings) => set({ settings }),
 }));

@@ -3,51 +3,46 @@ import ImageThumbnail from "./ImageThumbnail";
 import ImagePair from "../ImagePair/ImagePair";
 import EmptyImagePair from "../ImagePair/EmptyImagePair";
 import FullScreenComparison from "./FullScreenComparison";
-import { ImagePairInterface } from "../../types";
+import { useImageStore } from "../../store/ImageStore";
 
-interface ImageViewerProps {
-  images: ImagePairInterface[];
-  currentIndex: number;
-  onSelectImage: (index: number) => void;
-}
-
-const ImageViewer: React.FC<ImageViewerProps> = ({
-  images,
-  currentIndex,
-  onSelectImage,
-}) => {
+const ImageViewer: React.FC = () => {
+  const { images, currentIndex, setCurrentIndex } = useImageStore();
   const [isFullScreen, setIsFullScreen] = useState(false);
   const currentImage = useMemo(() => images[currentIndex], [images, currentIndex]);
 
   const toggleFullScreen = () => setIsFullScreen(!isFullScreen);
 
+  const handleSelectImage = (index: number) => {
+    setCurrentIndex(index);
+  };
+
   return (
     <div className='mt-8'>
       {images.length === 0 ? (
         <EmptyImagePair />
-      ) : (
+      ) : currentImage ? (
         <ImagePair
           original={currentImage.original}
           processed={currentImage.processed}
           onClick={toggleFullScreen}
         />
-      )}
+      ) : null}
       <div className='flex overflow-x-auto py-2'>
         {images.map((image, index) => (
           <ImageThumbnail
             key={index}
             src={image.original}
             isSelected={index === currentIndex}
-            onClick={() => onSelectImage(index)}
+            onClick={() => handleSelectImage(index)}
           />
         ))}
       </div>
-      {isFullScreen && (
+      {isFullScreen && currentImage && (
         <FullScreenComparison
           images={images}
           currentIndex={currentIndex}
           onClose={toggleFullScreen}
-          onSelectImage={onSelectImage}
+          onSelectImage={handleSelectImage}
         />
       )}
     </div>

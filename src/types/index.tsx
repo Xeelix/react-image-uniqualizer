@@ -2,3 +2,45 @@ export interface ImagePairInterface {
   original: string;
   processed: string;
 }
+
+export interface UniqualizationSettingsForm {
+  copies: number;
+  folderSrtucture: "oneFolder" | "subfolders" | "eachFolder";
+  naming: "hash" | "sequential";
+  prefix: string;
+  saveNamesList: boolean;
+  rightNumbering: boolean;
+  rotation: {
+    enabled: boolean;
+    min: number;
+    max: number;
+  };
+  crop: {
+    enabled: boolean;
+    side: "random" | "top" | "bottom" | "left" | "right";
+    min: number;
+    max: number;
+  };
+  saturation: {
+    enabled: boolean;
+    min: number;
+    max: number;
+  };
+  brightness: {
+    enabled: boolean;
+    min: number;
+    max: number;
+  };
+  contrast: {
+    enabled: boolean;
+    min: number;
+    max: number;
+  };
+  reflection: "none" | "horizontal" | "vertical" | "both";
+  noise: {
+    enabled: boolean;
+    min: number;
+    max: number;
+  };
+  metadata: boolean;
+}

@@ -2,9 +2,10 @@ import ImageUploader from "../components/ImageUploader/ImageUploader";
 import ImageViewer from "../components/ImageViewer/ImageViewer";
 import { Container } from "../components/Container/Container";
 import { useImageStore } from "../store/ImageStore";
+import UniqualizationSettings from "../components/UniqualizationSettings/UniqualizationSettings";
 
 function Home() {
-const { images, currentIndex, setImages, setCurrentIndex } = useImageStore();
+  const { setImages } = useImageStore();
 
   const handleImageUpload = (files: File[]) => {
     const validFiles = files.slice(0, 10);
@@ -13,10 +14,6 @@ const { images, currentIndex, setImages, setCurrentIndex } = useImageStore();
       processed: URL.createObjectURL(file),
     }));
     setImages(newImages);
-  };
-
-  const handleSelectImage = (index: number) => {
-    setCurrentIndex(index);
   };
 
   return (
@@ -28,14 +25,13 @@ const { images, currentIndex, setImages, setCurrentIndex } = useImageStore();
 
         <div className='bg-white p-6 rounded-lg shadow-md'>
           <ImageUploader onUpload={handleImageUpload} />
+
+          <UniqualizationSettings />
         </div>
 
+
         <div>
-          <ImageViewer
-            images={images}
-            currentIndex={currentIndex}
-            onSelectImage={handleSelectImage}
-          />
+          <ImageViewer />
         </div>
       </Container>
     </div>
