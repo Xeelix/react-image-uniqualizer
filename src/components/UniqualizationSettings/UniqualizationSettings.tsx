@@ -2,7 +2,9 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useImageStore } from "../../store/ImageStore";
 import { UniqualizationSettingsForm } from "../../types";
-import { TextInput } from "../CustomInputs/TextInput";
+import CopiesAndFolderStructure from "./CopiesAndFolderStructure";
+import RotationSettings from "./RotationSettings";
+
 
 const UniqualizationSettings: React.FC = () => {
   const { setSettings } = useImageStore();
@@ -30,23 +32,9 @@ const UniqualizationSettings: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className='grid grid-cols-3 gap-4 items-center'>
-        <label className='text-sm font-medium text-gray-700'>
-          Количество копий:
-        </label>
-
-        <Controller
-          control={control}
-          name='copies'
-          render={({ field }) => (
-            <TextInput 
-            value={field.value} 
-            onChange={field.onChange} 
-            />
-          )}
-        />
-      </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
+        <CopiesAndFolderStructure control={control} />
+        <RotationSettings control={control} />
     </form>
   );
 };
