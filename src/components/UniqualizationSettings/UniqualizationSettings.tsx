@@ -4,11 +4,13 @@ import { useImageStore } from "../../store/ImageStore";
 import { UniqualizationSettingsForm } from "../../types";
 import CopiesAndFolderStructure from "./CopiesAndFolderStructure";
 import RotationSettings from "./RotationSettings";
+import { applyRotation } from "../../utils/applyRotation";
 
 
 const UniqualizationSettings: React.FC = () => {
-  const { setSettings } = useImageStore();
-  const { control, handleSubmit } = useForm<UniqualizationSettingsForm>({
+    const { images, setSettings, updateProcessedImage } = useImageStore();
+
+    const { control, handleSubmit } = useForm<UniqualizationSettingsForm>({
     defaultValues: {
       copies: 1,
       folderSrtucture: "oneFolder",
@@ -27,14 +29,26 @@ const UniqualizationSettings: React.FC = () => {
     },
   });
 
-  const onSubmit = (data: UniqualizationSettingsForm) => {
-    setSettings(data);
-  };
 
+  const onSubmit = async (data: UniqualizationSettingsForm) => {
+    console.log(data);
+    setSettings(data);
+    
+    for (let i = 0; i < images.length; i++) {
+      const img = new Image();
+      img.src = images[i].original;
+      img.onload = async () => {
+        const rotatedImage = await applyRotation(img, data);
+        updateProcessedImage(i, rotatedImage);
+      };
+    }
+  };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
         <CopiesAndFolderStructure control={control} />
         <RotationSettings control={control} />
+
+        <button type="submit">Submit</button>
     </form>
   );
 };
