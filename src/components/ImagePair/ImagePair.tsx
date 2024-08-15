@@ -1,5 +1,5 @@
 import React from 'react';
-import ImageColumn from './image-column';
+import ImageColumn from './ImageColumn';
 
 interface ImagePairProps {
   original: string;

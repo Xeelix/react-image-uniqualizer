@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from "react";
-import ImageThumbnail from "./image-thumbnail";
-import ImagePair from "../ui/image-pair";
-import EmptyImagePair from "../ui/empty-image-pair";
-import FullScreenComparison from "./full-screen-comparison";
-import { Image } from "../../types/types";
+import ImageThumbnail from "./ImageThumbnail";
+import ImagePair from "../ImagePair/ImagePair";
+import EmptyImagePair from "../ImagePair/EmptyImagePair";
+import FullScreenComparison from "./FullScreenComparison";
+import { ImagePairInterface } from "../../types";
 
 interface ImageViewerProps {
-  images: Image[];
+  images: ImagePairInterface[];
   currentIndex: number;
   onSelectImage: (index: number) => void;
 }

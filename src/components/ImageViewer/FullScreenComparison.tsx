@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect } from 'react';
-import ImageThumbnail from './image-thumbnail';
-import { Image } from '../../types/types';
+import ImageThumbnail from './ImageThumbnail';
+import { ImagePairInterface } from '../../types';
 
 interface FullScreenComparisonProps {
-  images: Image[];
+  images: ImagePairInterface[];
   currentIndex: number;
   onClose: () => void;
   onSelectImage: (index: number) => void;

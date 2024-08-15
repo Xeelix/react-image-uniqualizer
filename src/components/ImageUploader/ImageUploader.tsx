@@ -1,6 +1,4 @@
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import clsx from "clsx";
 import { IconUpload } from '@tabler/icons-react';
 
 interface ImageUploaderProps {

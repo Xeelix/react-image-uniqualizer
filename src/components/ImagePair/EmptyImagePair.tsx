@@ -1,5 +1,5 @@
 import React from 'react';
-import EmptyImageColumn from './empty-image-column';
+import EmptyImageColumn from './EmptyImageColumn';
 
 const EmptyImagePair: React.FC = () => (
   <div className='flex justify-between mb-4'>

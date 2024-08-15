@@ -1,4 +1,4 @@
-export interface Image {
+export interface ImagePairInterface {
   original: string;
   processed: string;
 }
