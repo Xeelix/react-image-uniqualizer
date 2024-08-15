@@ -13,6 +13,8 @@ import BrightnessSettings from "./BrightnessSettings";
 import { applyBrightness } from "../../utils/applyBrightness";
 import ContrastSettings from "./ContrastSettings";
 import { applyContrast } from "../../utils/applyContrast";
+import ReflectionSettings from "./ReflectionSettings";
+import { applyReflection } from "../../utils/applyReflection";
 
 const UniqualizationSettings: React.FC = () => {
   const { images, setSettings, updateProcessedImage } = useImageStore();
@@ -44,7 +46,10 @@ const UniqualizationSettings: React.FC = () => {
     });
   };
 
-  const processImage = async (img: HTMLImageElement, data: UniqualizationSettingsForm) => {
+  const processImage = async (
+    img: HTMLImageElement,
+    data: UniqualizationSettingsForm
+  ) => {
     const rotatedImage = await applyRotation(img, data);
     const rotatedImg = await loadImage(rotatedImage);
 
@@ -58,7 +63,10 @@ const UniqualizationSettings: React.FC = () => {
     const brightenedImg = await loadImage(brightenedImage);
 
     const contrastedImage = await applyContrast(brightenedImg, data);
-    return contrastedImage;
+    const contrastedImg = await loadImage(contrastedImage);
+  
+    const reflectedImage = await applyReflection(contrastedImg, data);
+    return reflectedImage;
   };
 
   const onSubmit = async (data: UniqualizationSettingsForm) => {
@@ -79,6 +87,7 @@ const UniqualizationSettings: React.FC = () => {
       <SaturationSettings control={control} />
       <BrightnessSettings control={control} />
       <ContrastSettings control={control} />
+      <ReflectionSettings control={control} />
 
       <button type='submit'>Submit</button>
     </form>
