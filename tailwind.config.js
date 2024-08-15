@@ -10,8 +10,10 @@ export default {
   theme: {
     colors: {
       ...colors,
-      'primary': '#00AEEF',
+      'primary': '#02AFFF',
+      'primary-dark': '#0a9ee3',
       'secondary': '#F0F9FF',
+      'background': '#EAF3F8',
     },
     extend: {},
   },
