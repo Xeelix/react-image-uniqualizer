@@ -43,17 +43,15 @@ export const processImages = async (
   images: ImagePairInterface[],
   settings: UniqualizationSettingsForm
 ): Promise<ImagePairInterface[]> => {
-  const processedImages = [];
-
-  for (const image of images) {
+  const processImagePromises = images.map(async (image) => {
     const img = await createImageFromSrc(image.original);
     const processedImage = await processImage(img, settings);
-    processedImages.push({
+    return {
       original: image.original,
       processed: processedImage,
       name: image.name,
-    });
-  }
+    };
+  });
 
-  return processedImages;
+  return Promise.all(processImagePromises);
 };

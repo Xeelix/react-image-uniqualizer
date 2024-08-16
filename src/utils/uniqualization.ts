@@ -13,6 +13,8 @@ export async function uniqualizeImages(
   const zip = new JSZip();
   const processedNames: string[] = [];
 
+  const timeStart = performance.now();
+
   for (let i = 0; i < settings.copies; i++) {
     for (let j = 0; j < images.length; j++) {
       const image = images[j];
@@ -44,6 +46,8 @@ export async function uniqualizeImages(
       }
     }
   }
+
+  console.log(`Time taken: ${performance.now() - timeStart}ms`);
 
   if (settings.saveNamesList) {
     const namesList = generateNamesList(processedNames);
