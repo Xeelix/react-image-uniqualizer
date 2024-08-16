@@ -4,8 +4,7 @@ import { Container } from "../components/Container/Container";
 import { useImageStore } from "../store/ImageStore";
 import UniqualizationSettings from "../components/UniqualizationSettings/UniqualizationSettings";
 import { processImages } from "../utils/imageProcessing";
-import { useRef, useState } from "react";
-import JSZip from "jszip";
+import { useState } from "react";
 import { CustomLoader } from "../components/CustomLoader";
 import { uniqualizeImages } from "../utils/uniqualization";
 
@@ -21,7 +20,6 @@ function Home() {
       name: file.name,
     }));
 
-    console.log(newImages);
     // Process the new images
     const processedImages = await processImages(newImages, settings);
 

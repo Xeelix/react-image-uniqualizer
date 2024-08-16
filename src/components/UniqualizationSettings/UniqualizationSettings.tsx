@@ -12,6 +12,7 @@ import ReflectionSettings from "./ReflectionSettings";
 import NoiseSettings from "./NoiseSettings";
 import { processImages } from "../../utils/imageProcessing";
 import MetadataSettings from "./MetadataSettings";
+import NamingSettings from "./NamingSettings";
 
 const UniqualizationSettings: React.FC = () => {
   const { images, settings, setSettings, setImages } = useImageStore();
@@ -38,12 +39,15 @@ const UniqualizationSettings: React.FC = () => {
     name: [
       "copies",
       "folderSrtucture",
+      "naming",
+      "prefix",
+      "saveNamesList",
+      "rightNumbering",
       "metadata",
     ],
   });
 
   useEffect(() => {
-    console.log("Watched secondary fields: ", watchedSecondaryFields);
     handleSubmit((data) => setSettings(data))();
   }, [handleSubmit, setSettings, watchedImageViewFields, watchedSecondaryFields]);
 
@@ -69,6 +73,7 @@ const UniqualizationSettings: React.FC = () => {
   return (
     <form className='grid gap-4'>
       <CopiesAndFolderStructure control={control} />
+      <NamingSettings control={control} />
       <RotationSettings control={control} />
       <CropSettings control={control} />
       <SaturationSettings control={control} />

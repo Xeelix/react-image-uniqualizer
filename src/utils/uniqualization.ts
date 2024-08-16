@@ -8,7 +8,7 @@ export const uniqualizeImages = async (
   setIsProcessing: (isProcessing: boolean) => void
 ): Promise<Blob> => {
   const zip = new JSZip();
-  const processedImages: { copy: number; index: number; blob: Blob }[] = [];
+  const processedImages: { copy: number; index: number; blob: Blob; name: string }[] = [];
 
   setIsProcessing(true);
 
@@ -18,13 +18,12 @@ export const uniqualizeImages = async (
       processed: img.original,
       name: img.name
     }));
-
     const processedCopy = await processImages(imageCopy, settings);
 
     const promises = processedCopy.map(async (image, index) => {
       const response = await fetch(image.processed);
       const blob = await response.blob();
-      processedImages.push({ copy, index, blob });
+      processedImages.push({ copy, index, blob, name: image.name });
     });
 
     await Promise.all(promises);
@@ -38,13 +37,14 @@ export const uniqualizeImages = async (
 };
 
 const addImagesToZip = (
-  processedImages: { copy: number; index: number; blob: Blob }[],
+  processedImages: { copy: number; index: number; blob: Blob; name: string }[],
   zip: JSZip,
   folderStructure: UniqualizationSettingsForm["folderSrtucture"]
 ) => {
   const copyCount = Math.max(...processedImages.map((img) => img.copy));
+  console.log(processedImages);
 
-  processedImages.forEach(({ copy, index, blob }) => {
+  processedImages.forEach(({ copy, index, blob, name }) => {
     const fileName = `image_${index + 1}.jpg`;
 
     switch (folderStructure) {
