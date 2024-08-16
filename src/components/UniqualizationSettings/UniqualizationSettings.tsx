@@ -34,7 +34,7 @@ const UniqualizationSettings: React.FC = () => {
     ],
   });
 
-   const watchedSecondaryFields = useWatch({
+  const watchedSecondaryFields = useWatch({
     control,
     name: [
       "copies",
@@ -50,7 +50,12 @@ const UniqualizationSettings: React.FC = () => {
   useEffect(() => {
     handleSubmit((data) => setSettings(data))();
     console.log(watchedImageViewFields);
-  }, [handleSubmit, setSettings, watchedImageViewFields, watchedSecondaryFields]);
+  }, [
+    handleSubmit,
+    setSettings,
+    watchedImageViewFields,
+    watchedSecondaryFields,
+  ]);
 
   useEffect(() => {
     const processAndSetImages = async (data: UniqualizationSettingsForm) => {
@@ -68,7 +73,7 @@ const UniqualizationSettings: React.FC = () => {
     };
 
     handleSubmit((data) => processAndSetImages(data))();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchedImageViewFields]);
 
   return (

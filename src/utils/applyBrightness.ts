@@ -8,7 +8,9 @@ export const applyBrightness = async (
     return image.src;
   }
 
-  const brightnessAmount = Math.random() * (settings.brightness.max - settings.brightness.min) + settings.brightness.min;
+  const brightnessAmount =
+    Math.random() * (settings.brightness.max - settings.brightness.min) +
+    settings.brightness.min;
 
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");

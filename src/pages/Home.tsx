@@ -29,7 +29,7 @@ function Home() {
 
   const handleUniqualization = async () => {
     if (images.length === 0 || isProcessing) return;
-  
+
     try {
       const content = await uniqualizeImages(images, settings, setIsProcessing);
       const link = document.createElement("a");

@@ -15,7 +15,9 @@ const folderStructureOptions = [
   { value: "eachFolder", label: "В каждой папке набор из всех изображений" },
 ];
 
-const CopiesAndFolderStructure: React.FC<CopiesAndFolderStructureProps> = ({ control }) => {
+const CopiesAndFolderStructure: React.FC<CopiesAndFolderStructureProps> = ({
+  control,
+}) => {
   const [showFAQ, setShowFAQ] = useState(false);
 
   const toggleFAQ = () => {
@@ -24,28 +26,28 @@ const CopiesAndFolderStructure: React.FC<CopiesAndFolderStructureProps> = ({ con
   };
 
   return (
-    <div className="grid grid-cols-5 gap-6 items-center">
-      <label className="text-sm font-medium text-gray-700">
+    <div className='grid grid-cols-5 gap-6 items-center'>
+      <label className='text-sm font-medium text-gray-700'>
         Количество копий:
       </label>
 
       <Controller
         control={control}
-        name="copies"
+        name='copies'
         render={({ field }) => (
           <CustomInput
-            inputType="number"
+            inputType='number'
             value={field.value}
             onChange={field.onChange}
             max={30}
-            placeholder="1"
+            placeholder='1'
           />
         )}
       />
 
       <Controller
         control={control}
-        name="folderStructure"
+        name='folderStructure'
         render={({ field }) => (
           <CustomDropdown
             value={field.value}
@@ -56,11 +58,11 @@ const CopiesAndFolderStructure: React.FC<CopiesAndFolderStructureProps> = ({ con
           />
         )}
       />
-      <div className="col-span-2 flex justify-start">
+      <div className='col-span-2 flex justify-start'>
         <button
-          className="text-primary cursor-pointer hover:underline focus:outline-none"
+          className='text-primary cursor-pointer hover:underline focus:outline-none'
           onClick={toggleFAQ}
-          type="button"
+          type='button'
         >
           Подробнее в FAQ
         </button>

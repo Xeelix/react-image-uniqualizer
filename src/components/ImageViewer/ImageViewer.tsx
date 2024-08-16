@@ -8,7 +8,10 @@ import { useImageStore } from "../../store/ImageStore";
 const ImageViewer: React.FC = () => {
   const { images, currentIndex, setCurrentIndex } = useImageStore();
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const currentImage = useMemo(() => images[currentIndex], [images, currentIndex]);
+  const currentImage = useMemo(
+    () => images[currentIndex],
+    [images, currentIndex]
+  );
 
   const toggleFullScreen = () => setIsFullScreen(!isFullScreen);
 

@@ -7,7 +7,11 @@ interface ImageThumbnailProps {
   onClick: () => void;
 }
 
-const ImageThumbnail: React.FC<ImageThumbnailProps> = ({ src, isSelected, onClick }) => {
+const ImageThumbnail: React.FC<ImageThumbnailProps> = ({
+  src,
+  isSelected,
+  onClick,
+}) => {
   return (
     <div
       className={clsx(
@@ -16,7 +20,7 @@ const ImageThumbnail: React.FC<ImageThumbnailProps> = ({ src, isSelected, onClic
       )}
       onClick={onClick}
     >
-      <img src={src} alt="Thumbnail" className="w-full h-full object-cover" />
+      <img src={src} alt='Thumbnail' className='w-full h-full object-cover' />
     </div>
   );
 };

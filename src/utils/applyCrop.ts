@@ -47,7 +47,10 @@ export const applyCrop = async (
       const randomSide = sides[Math.floor(Math.random() * sides.length)];
       return applyCrop(image, {
         ...settings,
-        crop: { ...settings.crop, side: randomSide as any },
+        crop: {
+          ...settings.crop,
+          side: randomSide as "top" | "bottom" | "left" | "right",
+        },
       });
     }
   }

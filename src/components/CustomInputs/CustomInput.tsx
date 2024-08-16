@@ -8,7 +8,7 @@ interface InputProps {
   max?: number;
   step?: number;
   className?: string;
-  inputType: 'number' | 'text';
+  inputType: "number" | "text";
   placeholder?: string; // Added placeholder prop
 }
 
@@ -26,14 +26,14 @@ export const CustomInput: React.FC<InputProps> = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    
-    if (inputType === 'number') {
+
+    if (inputType === "number") {
       const numValue = parseFloat(newValue);
       if (!isNaN(numValue) && numValue >= min && numValue <= max) {
         const roundedValue = Math.round(numValue * 10) / 10;
         setInputValue(roundedValue.toString());
         onChange(roundedValue);
-      } else if (newValue === '' || newValue === '-') {
+      } else if (newValue === "" || newValue === "-") {
         setInputValue(newValue);
       }
     } else {
@@ -43,9 +43,9 @@ export const CustomInput: React.FC<InputProps> = ({
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
-      if (inputType === 'number') {
+      if (inputType === "number") {
         const numValue = parseFloat(inputValue);
         if (!isNaN(numValue) && numValue >= min && numValue <= max) {
           const roundedValue = Math.round(numValue * 10) / 10;
@@ -58,8 +58,9 @@ export const CustomInput: React.FC<InputProps> = ({
   };
 
   const handleIncrement = () => {
-    if (inputType === 'number') {
-      const currentValue = typeof value === 'number' ? value : parseFloat(value as string);
+    if (inputType === "number") {
+      const currentValue =
+        typeof value === "number" ? value : parseFloat(value as string);
       const newValue = Math.min(currentValue + step, max);
       const roundedValue = Math.round(newValue * 10) / 10;
       setInputValue(roundedValue.toString());
@@ -68,8 +69,9 @@ export const CustomInput: React.FC<InputProps> = ({
   };
 
   const handleDecrement = () => {
-    if (inputType === 'number') {
-      const currentValue = typeof value === 'number' ? value : parseFloat(value as string);
+    if (inputType === "number") {
+      const currentValue =
+        typeof value === "number" ? value : parseFloat(value as string);
       const newValue = Math.max(currentValue - step, min);
       const roundedValue = Math.round(newValue * 10) / 10;
       setInputValue(roundedValue.toString());
@@ -78,19 +80,21 @@ export const CustomInput: React.FC<InputProps> = ({
   };
 
   return (
-    <div className={`relative inline-flex items-center h-11 rounded-lg border border-gray-300 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent ${className}`}>
+    <div
+      className={`relative inline-flex items-center h-11 rounded-lg border border-gray-300 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent ${className}`}
+    >
       <input
-        type={inputType === 'number' ? 'number' : 'text'}
+        type={inputType === "number" ? "number" : "text"}
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        min={inputType === 'number' ? min : undefined}
-        max={inputType === 'number' ? max : undefined}
-        step={inputType === 'number' ? step : undefined}
+        min={inputType === "number" ? min : undefined}
+        max={inputType === "number" ? max : undefined}
+        step={inputType === "number" ? step : undefined}
         placeholder={placeholder} // Added placeholder attribute
         className='w-full h-full px-3 text-lg focus:outline-none rounded-lg text-gray-400'
       />
-      {inputType === 'number' && (
+      {inputType === "number" && (
         <div className='absolute right-1 h-full flex flex-col justify-center'>
           <button
             onClick={handleIncrement}

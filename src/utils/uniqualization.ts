@@ -16,7 +16,11 @@ export async function uniqualizeImages(
   for (let i = 0; i < settings.copies; i++) {
     for (let j = 0; j < images.length; j++) {
       const image = images[j];
-      const newName = generateImageName(image.name, i * images.length + j, settings);
+      const newName = generateImageName(
+        image.name,
+        i * images.length + j,
+        settings
+      );
       processedNames.push(newName);
 
       // Process the image

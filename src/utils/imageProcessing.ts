@@ -15,10 +15,22 @@ export const processImage = async (
 
   processedImage = await applyRotation(img, settings);
   processedImage = await applyCrop(await loadImage(processedImage), settings);
-  processedImage = await applySaturation(await loadImage(processedImage), settings);
-  processedImage = await applyBrightness(await loadImage(processedImage), settings);
-  processedImage = await applyContrast(await loadImage(processedImage), settings);
-  processedImage = await applyReflection(await loadImage(processedImage), settings);
+  processedImage = await applySaturation(
+    await loadImage(processedImage),
+    settings
+  );
+  processedImage = await applyBrightness(
+    await loadImage(processedImage),
+    settings
+  );
+  processedImage = await applyContrast(
+    await loadImage(processedImage),
+    settings
+  );
+  processedImage = await applyReflection(
+    await loadImage(processedImage),
+    settings
+  );
   processedImage = await applyNoise(await loadImage(processedImage), settings);
 
   return processedImage;
@@ -48,7 +60,7 @@ export const processImages = async (
     processedImages.push({
       original: images[i].original,
       processed: processedImage,
-      name: images[i].name
+      name: images[i].name,
     });
   }
 

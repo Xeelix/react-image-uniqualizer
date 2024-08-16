@@ -22,9 +22,7 @@ const RotationSettings: React.FC<RotationSettingsProps> = ({ control }) => {
           />
           <label className='text-sm'>Поворот:</label>
         </div>
-        <label className='text-sm text-gray-400'>
-          Угол поворота картинки
-        </label>
+        <label className='text-sm text-gray-400'>Угол поворота картинки</label>
       </div>
 
       <Controller

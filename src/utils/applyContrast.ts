@@ -24,7 +24,9 @@ export const applyContrast = async (
   ctx.drawImage(image, 0, 0, width, height);
 
   const imageData = ctx.getImageData(0, 0, width, height);
-  const contrastAmount = Math.random() * (settings.contrast.max - settings.contrast.min) + settings.contrast.min;
+  const contrastAmount =
+    Math.random() * (settings.contrast.max - settings.contrast.min) +
+    settings.contrast.min;
 
   adjustContrast(imageData, contrastAmount);
 
@@ -35,7 +37,7 @@ export const applyContrast = async (
 
 function adjustContrast(imageData: ImageData, contrast: number): void {
   const data = imageData.data;
-  contrast = (contrast - 100);
+  contrast = contrast - 100;
   const factor = (255 + contrast) / (255.01 - contrast);
 
   for (let i = 0; i < data.length; i += 4) {

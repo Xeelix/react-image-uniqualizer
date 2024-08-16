@@ -1,5 +1,5 @@
 import React from "react";
-import { IconUpload } from '@tabler/icons-react';
+import { IconUpload } from "@tabler/icons-react";
 
 interface ImageUploaderProps {
   onUpload: (files: File[]) => void;
@@ -30,7 +30,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload }) => {
         Загрузить изображения
       </label>
     </div>
-  )
+  );
 };
 
 export default ImageUploader;

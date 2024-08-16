@@ -1,5 +1,5 @@
-import React from 'react';
-import EmptyImagePlaceholder from '../EmptyImagePlaceholder/EmptyImagePlaceholder';
+import React from "react";
+import EmptyImagePlaceholder from "../EmptyImagePlaceholder/EmptyImagePlaceholder";
 
 interface EmptyImageColumnProps {
   title: string;

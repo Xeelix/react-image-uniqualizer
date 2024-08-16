@@ -1,5 +1,5 @@
-import React from 'react';
-import ImageColumn from './ImageColumn';
+import React from "react";
+import ImageColumn from "./ImageColumn";
 
 interface ImagePairProps {
   original: string;
@@ -7,10 +7,14 @@ interface ImagePairProps {
   onClick: () => void;
 }
 
-const ImagePair: React.FC<ImagePairProps> = ({ original, processed, onClick }) => (
+const ImagePair: React.FC<ImagePairProps> = ({
+  original,
+  processed,
+  onClick,
+}) => (
   <div className='flex justify-between mb-4 cursor-pointer' onClick={onClick}>
-    <ImageColumn title="Оригинал" src={original} />
-    <ImageColumn title="Обработанное" src={processed} />
+    <ImageColumn title='Оригинал' src={original} />
+    <ImageColumn title='Обработанное' src={processed} />
   </div>
 );
 
