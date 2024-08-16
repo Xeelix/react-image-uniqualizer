@@ -1,5 +1,5 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useCallback, useRef } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { useImageStore } from "../../store/ImageStore";
 import { UniqualizationSettingsForm } from "../../types";
 import CopiesAndFolderStructure from "./CopiesAndFolderStructure";
@@ -20,6 +20,7 @@ import { applyNoise } from "../../utils/applyNoise";
 
 const UniqualizationSettings: React.FC = () => {
   const { images, setSettings, updateProcessedImage } = useImageStore();
+  const isInitialRender = useRef(true);
 
   const { control, handleSubmit } = useForm<UniqualizationSettingsForm>({
     defaultValues: {
@@ -31,14 +32,37 @@ const UniqualizationSettings: React.FC = () => {
       rightNumbering: true,
       rotation: { enabled: true, min: -3, max: 3 },
       crop: { enabled: true, side: "random", min: 1, max: 3 },
-      saturation: { enabled: true, min: 2, max: 20 },
-      brightness: { enabled: true, min: 2, max: 20 },
-      contrast: { enabled: true, min: 2, max: 20 },
+      saturation: { enabled: true, min: 80, max: 120 },
+      brightness: { enabled: true, min: 80, max: 120 },
+      contrast: { enabled: true, min: 80, max: 120 },
       reflection: "none",
       noise: { enabled: true, max: 0.1 },
       metadata: true,
     },
   });
+
+  const watchedFields = useWatch({
+    control,
+    name: [
+      "rotation",
+      "crop",
+      "saturation",
+      "brightness",
+      "contrast",
+      "reflection",
+      "noise",
+    ],
+  });
+
+  const onSubmit = async (data: UniqualizationSettingsForm) => {
+    setSettings(data);
+
+    for (let i = 0; i < images.length; i++) {
+      const img = await loadImage(images[i].original);
+      const processedImage = await processImage(img, data);
+      updateProcessedImage(i, processedImage);
+    }
+  };
 
   const loadImage = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve) => {
@@ -74,18 +98,20 @@ const UniqualizationSettings: React.FC = () => {
     return noisyImage;
   };
 
-  const onSubmit = async (data: UniqualizationSettingsForm) => {
-    setSettings(data);
-
-    for (let i = 0; i < images.length; i++) {
-      const img = await loadImage(images[i].original);
-      const processedImage = await processImage(img, data);
-      updateProcessedImage(i, processedImage);
+  useEffect(() => {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
     }
-  };
+
+    if (images.length > 0) {
+      console.log("images.length > 0");
+      handleSubmit(onSubmit)();
+    }
+  }, [watchedFields, images.length]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='grid gap-4'>
+    <form className='grid gap-4'>
       <CopiesAndFolderStructure control={control} />
       <RotationSettings control={control} />
       <CropSettings control={control} />
@@ -94,8 +120,6 @@ const UniqualizationSettings: React.FC = () => {
       <ContrastSettings control={control} />
       <ReflectionSettings control={control} />
       <NoiseSettings control={control} />
-
-      <button type='submit'>Submit</button>
     </form>
   );
 };

@@ -93,6 +93,7 @@ export const CustomInput: React.FC<InputProps> = ({
             onClick={handleIncrement}
             className='px-1 focus:outline-none leading-none text-[#97A5BD] hover:text-[#6f7887] bg-white'
             tabIndex={-1}
+            type='button'
           >
             <IconChevronUp size={20} stroke={3} />
           </button>
@@ -100,6 +101,7 @@ export const CustomInput: React.FC<InputProps> = ({
             onClick={handleDecrement}
             className='px-1 focus:outline-none leading-none text-[#97A5BD] hover:text-[#6f7887] bg-white'
             tabIndex={-1}
+            type='button'
           >
             <IconChevronDown size={20} stroke={3} />
           </button>
