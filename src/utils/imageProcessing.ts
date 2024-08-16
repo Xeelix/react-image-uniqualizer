@@ -7,41 +7,36 @@ import { applyContrast } from "./applyContrast";
 import { applyReflection } from "./applyReflection";
 import { applyNoise } from "./applyNoise";
 
+const createImageFromSrc = async (src: string): Promise<HTMLImageElement> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.src = src;
+  });
+};
+
 export const processImage = async (
   img: HTMLImageElement,
   settings: UniqualizationSettingsForm
 ): Promise<string> => {
-  let processedImage = img.src;
+  let processedImage = img;
 
-  processedImage = await applyRotation(img, settings);
-  processedImage = await applyCrop(await loadImage(processedImage), settings);
-  processedImage = await applySaturation(
-    await loadImage(processedImage),
-    settings
-  );
-  processedImage = await applyBrightness(
-    await loadImage(processedImage),
-    settings
-  );
-  processedImage = await applyContrast(
-    await loadImage(processedImage),
-    settings
-  );
-  processedImage = await applyReflection(
-    await loadImage(processedImage),
-    settings
-  );
-  processedImage = await applyNoise(await loadImage(processedImage), settings);
+  const processingFunctions = [
+    applyRotation,
+    applyCrop,
+    applySaturation,
+    applyBrightness,
+    applyContrast,
+    applyReflection,
+    applyNoise,
+  ];
 
-  return processedImage;
-};
+  for (const func of processingFunctions) {
+    const processedSrc = await func(processedImage, settings);
+    processedImage = await createImageFromSrc(processedSrc);
+  }
 
-const loadImage = (src: string): Promise<HTMLImageElement> => {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.src = src;
-    img.onload = () => resolve(img);
-  });
+  return processedImage.src;
 };
 
 export const processImages = async (
@@ -50,17 +45,13 @@ export const processImages = async (
 ): Promise<ImagePairInterface[]> => {
   const processedImages = [];
 
-  for (let i = 0; i < images.length; i++) {
-    const img = new Image();
-    img.src = images[i].original;
-    await new Promise((resolve) => {
-      img.onload = resolve;
-    });
+  for (const image of images) {
+    const img = await createImageFromSrc(image.original);
     const processedImage = await processImage(img, settings);
     processedImages.push({
-      original: images[i].original,
+      original: image.original,
       processed: processedImage,
-      name: images[i].name,
+      name: image.name,
     });
   }
 

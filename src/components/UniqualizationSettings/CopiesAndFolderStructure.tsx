@@ -22,7 +22,6 @@ const CopiesAndFolderStructure: React.FC<CopiesAndFolderStructureProps> = ({
 
   const toggleFAQ = () => {
     setShowFAQ(!showFAQ);
-    console.log(showFAQ);
   };
 
   return (

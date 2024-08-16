@@ -49,7 +49,6 @@ const UniqualizationSettings: React.FC = () => {
 
   useEffect(() => {
     handleSubmit((data) => setSettings(data))();
-    console.log(watchedImageViewFields);
   }, [
     handleSubmit,
     setSettings,
