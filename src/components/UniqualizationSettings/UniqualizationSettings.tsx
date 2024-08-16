@@ -38,7 +38,7 @@ const UniqualizationSettings: React.FC = () => {
     control,
     name: [
       "copies",
-      "folderSrtucture",
+      "folderStructure",
       "naming",
       "prefix",
       "saveNamesList",
@@ -49,6 +49,7 @@ const UniqualizationSettings: React.FC = () => {
 
   useEffect(() => {
     handleSubmit((data) => setSettings(data))();
+    console.log(watchedImageViewFields);
   }, [handleSubmit, setSettings, watchedImageViewFields, watchedSecondaryFields]);
 
   useEffect(() => {
@@ -71,7 +72,7 @@ const UniqualizationSettings: React.FC = () => {
   }, [watchedImageViewFields]);
 
   return (
-    <form className='grid gap-4'>
+    <form className='grid gap-6'>
       <CopiesAndFolderStructure control={control} />
       <NamingSettings control={control} />
       <RotationSettings control={control} />

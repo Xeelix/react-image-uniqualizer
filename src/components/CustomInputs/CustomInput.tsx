@@ -9,6 +9,7 @@ interface InputProps {
   step?: number;
   className?: string;
   inputType: 'number' | 'text';
+  placeholder?: string; // Added placeholder prop
 }
 
 export const CustomInput: React.FC<InputProps> = ({
@@ -19,6 +20,7 @@ export const CustomInput: React.FC<InputProps> = ({
   step = 1,
   className,
   inputType,
+  placeholder, // Destructure placeholder prop
 }) => {
   const [inputValue, setInputValue] = useState(value.toString());
 
@@ -85,6 +87,7 @@ export const CustomInput: React.FC<InputProps> = ({
         min={inputType === 'number' ? min : undefined}
         max={inputType === 'number' ? max : undefined}
         step={inputType === 'number' ? step : undefined}
+        placeholder={placeholder} // Added placeholder attribute
         className='w-full h-full px-3 text-lg focus:outline-none rounded-lg text-gray-400'
       />
       {inputType === 'number' && (

@@ -6,7 +6,7 @@ export interface ImagePairInterface {
 
 export interface UniqualizationSettingsForm {
   copies: number;
-  folderSrtucture: "oneFolder" | "subfolders" | "eachFolder";
+  folderStructure: "oneFolder" | "subfolders" | "eachFolder";
   naming: "hash" | "sequential" | "original";
   prefix: string;
   saveNamesList: boolean;

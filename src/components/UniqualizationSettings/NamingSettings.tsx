@@ -48,6 +48,7 @@ const NamingSettings: React.FC<NamingSettingsProps> = ({ control }) => {
               value={field.value}
               onChange={field.onChange}
               className="w-full"
+              placeholder="Префикс"
             />
           )}
         />

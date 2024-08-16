@@ -1,5 +1,6 @@
 import { ImagePairInterface, UniqualizationSettingsForm } from "../types";
 import { generateImageName, generateNamesList } from "./naming";
+import { processImage } from "./imageProcessing";
 import JSZip from "jszip";
 
 export async function uniqualizeImages(
@@ -18,14 +19,23 @@ export async function uniqualizeImages(
       const newName = generateImageName(image.name, i * images.length + j, settings);
       processedNames.push(newName);
 
-      const response = await fetch(image.processed);
+      // Process the image
+      const img = new Image();
+      img.src = image.original;
+      await new Promise((resolve) => {
+        img.onload = resolve;
+      });
+      const processedImageSrc = await processImage(img, settings);
+
+      // Convert the processed image to a Blob
+      const response = await fetch(processedImageSrc);
       const blob = await response.blob();
 
-      if (settings.folderSrtucture === "oneFolder") {
+      if (settings.folderStructure === "oneFolder") {
         zip.file(newName, blob);
-      } else if (settings.folderSrtucture === "subfolders") {
-        zip.folder(`copy_${i + 1}`)?.file(newName, blob);
-      } else if (settings.folderSrtucture === "eachFolder") {
+      } else if (settings.folderStructure === "subfolders") {
+        zip.folder(`${i + 1}`)?.file(newName, blob);
+      } else if (settings.folderStructure === "eachFolder") {
         zip.folder(`image_${j + 1}`)?.file(newName, blob);
       }
     }

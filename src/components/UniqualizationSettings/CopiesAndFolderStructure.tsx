@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Control, Controller } from "react-hook-form";
 import { UniqualizationSettingsForm } from "../../types";
 import { CustomInput } from "../CustomInputs/CustomInput";
 import { CustomDropdown } from "../CustomInputs/CustomDropdown";
+import FAQPopup from "./FAQPopup";
 
 interface CopiesAndFolderStructureProps {
   control: Control<UniqualizationSettingsForm>;
@@ -15,6 +16,13 @@ const folderStructureOptions = [
 ];
 
 const CopiesAndFolderStructure: React.FC<CopiesAndFolderStructureProps> = ({ control }) => {
+  const [showFAQ, setShowFAQ] = useState(false);
+
+  const toggleFAQ = () => {
+    setShowFAQ(!showFAQ);
+    console.log(showFAQ);
+  };
+
   return (
     <div className="grid grid-cols-5 gap-6 items-center">
       <label className="text-sm font-medium text-gray-700">
@@ -30,13 +38,14 @@ const CopiesAndFolderStructure: React.FC<CopiesAndFolderStructureProps> = ({ con
             value={field.value}
             onChange={field.onChange}
             max={30}
+            placeholder="1"
           />
         )}
       />
 
       <Controller
         control={control}
-        name="folderSrtucture"
+        name="folderStructure"
         render={({ field }) => (
           <CustomDropdown
             value={field.value}
@@ -47,15 +56,16 @@ const CopiesAndFolderStructure: React.FC<CopiesAndFolderStructureProps> = ({ con
           />
         )}
       />
-
       <div className="col-span-2 flex justify-start">
-        <div
-          className="text-primary cursor-pointer"
-          onClick={() => window.open("https://www.google.com", "_blank")}
+        <button
+          className="text-primary cursor-pointer hover:underline focus:outline-none"
+          onClick={toggleFAQ}
+          type="button"
         >
           Подробнее в FAQ
-        </div>
+        </button>
       </div>
+      {showFAQ && <FAQPopup onClose={toggleFAQ} />}
     </div>
   );
 };

@@ -13,7 +13,7 @@ interface ImageStore {
 
 const defaultSettings: UniqualizationSettingsForm = {
   copies: 1,
-  folderSrtucture: "oneFolder",
+  folderStructure: "oneFolder",
   naming: "hash",
   prefix: "",
   saveNamesList: true,

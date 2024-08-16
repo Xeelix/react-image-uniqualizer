@@ -59,7 +59,7 @@ function Home() {
           <ImageViewer />
         </div>
 
-        <div className='mt-6'>
+        <div className='mt-4 flex justify-end'>
           <button
             onClick={handleUniqualization}
             className={`py-2 px-4 rounded-md transition-colors duration-200 flex items-center justify-center ${
