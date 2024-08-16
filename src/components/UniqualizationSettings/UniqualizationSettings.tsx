@@ -59,10 +59,6 @@ const UniqualizationSettings: React.FC = () => {
 
   useEffect(() => {
     const processAndSetImage = async (data: UniqualizationSettingsForm) => {
-      if (isProcessing.current) {
-        console.log("Already processing image...");
-        return;
-      }
       isProcessing.current = true;
       console.log("Processing image...", settings.noise);
 

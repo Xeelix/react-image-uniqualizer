@@ -30,16 +30,18 @@ const ImageViewer: React.FC = () => {
           onClick={toggleFullScreen}
         />
       ) : null}
-      <div className='flex overflow-x-auto py-2'>
-        {images.map((image, index) => (
-          <ImageThumbnail
-            key={index}
-            src={image.original}
-            isSelected={index === currentIndex}
-            onClick={() => handleSelectImage(index)}
-          />
-        ))}
-      </div>
+      {!isFullScreen && (
+        <div className='flex justify-center overflow-x-auto py-2'>
+          {images.map((image, index) => (
+            <ImageThumbnail
+              key={index}
+              src={image.original}
+              isSelected={index === currentIndex}
+              onClick={() => handleSelectImage(index)}
+            />
+          ))}
+        </div>
+      )}
       {isFullScreen && currentImage && (
         <FullScreenComparison
           images={images}
