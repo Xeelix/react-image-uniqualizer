@@ -14,14 +14,13 @@ import { processImages } from "../../utils/imageProcessing";
 import MetadataSettings from "./MetadataSettings";
 
 const UniqualizationSettings: React.FC = () => {
-  const { images, settings, setSettings, updateProcessedImage } = useImageStore();
+  const { images, settings, setSettings, setImages } = useImageStore();
   const isProcessing = useRef(false);
-
-  const { control, handleSubmit } = useForm<UniqualizationSettingsForm>({
+  const { control, handleSubmit, reset } = useForm<UniqualizationSettingsForm>({
     defaultValues: settings,
   });
 
-  const watchedFields = useWatch({
+  const watchedImageViewFields = useWatch({
     control,
     name: [
       "rotation",
@@ -34,10 +33,38 @@ const UniqualizationSettings: React.FC = () => {
     ],
   });
 
+   const watchedSecondaryFields = useWatch({
+    control,
+    name: [
+      "copies",
+      "folderSrtucture",
+      "metadata",
+    ],
+  });
+
   useEffect(() => {
-    handleSubmit((data) => processImages(images, data, setSettings, updateProcessedImage, isProcessing))();
+    console.log("Watched secondary fields: ", watchedSecondaryFields);
+    handleSubmit((data) => setSettings(data))();
+  }, [handleSubmit, setSettings, watchedImageViewFields, watchedSecondaryFields]);
+
+  useEffect(() => {
+    const processAndSetImages = async (data: UniqualizationSettingsForm) => {
+      if (isProcessing.current) return;
+      isProcessing.current = true;
+
+      try {
+        const processedImages = await processImages(images, data);
+        setImages(processedImages);
+      } catch (error) {
+        console.error("Error processing images: ", error);
+      } finally {
+        isProcessing.current = false;
+      }
+    };
+
+    handleSubmit((data) => processAndSetImages(data))();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watchedFields]);
+  }, [watchedImageViewFields]);
 
   return (
     <form className='grid gap-4'>

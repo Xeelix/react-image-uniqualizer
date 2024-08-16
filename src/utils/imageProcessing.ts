@@ -33,16 +33,10 @@ const loadImage = (src: string): Promise<HTMLImageElement> => {
 };
 
 export const processImages = async (
-  images: { original: string }[],
-  data: UniqualizationSettingsForm,
-  setSettings: (data: UniqualizationSettingsForm) => void,
-  updateProcessedImage: (index: number, processedImage: string) => void,
-  isProcessing: React.MutableRefObject<boolean>
-) => {
-  if (isProcessing.current) return;
-  isProcessing.current = true;
-
-  setSettings(data);
+  images: { original: string; processed: string }[],
+  settings: UniqualizationSettingsForm
+): Promise<{ original: string; processed: string }[]> => {
+  const processedImages = [];
 
   for (let i = 0; i < images.length; i++) {
     const img = new Image();
@@ -50,9 +44,12 @@ export const processImages = async (
     await new Promise((resolve) => {
       img.onload = resolve;
     });
-    const processedImage = await processImage(img, data);
-    updateProcessedImage(i, processedImage);
+    const processedImage = await processImage(img, settings);
+    processedImages.push({
+      original: images[i].original,
+      processed: processedImage
+    });
   }
 
-  isProcessing.current = false;
+  return processedImages;
 };

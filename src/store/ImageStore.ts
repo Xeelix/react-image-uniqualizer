@@ -34,8 +34,10 @@ export const useImageStore = create<ImageStore>((set) => ({
   setImages: (images) => set({ images }),
   setCurrentIndex: (index) => set({ currentIndex: index }),
   settings: defaultSettings,
-  setSettings: (settings) => set({ settings }),
-
+  setSettings: (settings) => {
+    set({ settings });
+  },
+  
   updateProcessedImage: (index: number, newProcessedImage: string) =>
     set((state) => ({
       images: state.images.map((img, i) =>
