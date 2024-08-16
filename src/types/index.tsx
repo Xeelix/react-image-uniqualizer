@@ -39,7 +39,6 @@ export interface UniqualizationSettingsForm {
   reflection: "none" | "horizontal" | "vertical" | "both";
   noise: {
     enabled: boolean;
-    min: number;
     max: number;
   };
   metadata: boolean;

@@ -19,26 +19,11 @@ import NoiseSettings from "./NoiseSettings";
 import { applyNoise } from "../../utils/applyNoise";
 
 const UniqualizationSettings: React.FC = () => {
-  const { images, setSettings, updateProcessedImage } = useImageStore();
+  const { images, settings, setSettings, updateProcessedImage } = useImageStore();
   const isInitialRender = useRef(true);
 
   const { control, handleSubmit } = useForm<UniqualizationSettingsForm>({
-    defaultValues: {
-      copies: 1,
-      folderSrtucture: "oneFolder",
-      naming: "hash",
-      prefix: "",
-      saveNamesList: true,
-      rightNumbering: true,
-      rotation: { enabled: true, min: -3, max: 3 },
-      crop: { enabled: true, side: "random", min: 1, max: 3 },
-      saturation: { enabled: true, min: 80, max: 120 },
-      brightness: { enabled: true, min: 80, max: 120 },
-      contrast: { enabled: true, min: 80, max: 120 },
-      reflection: "none",
-      noise: { enabled: true, max: 0.1 },
-      metadata: true,
-    },
+    defaultValues: settings,
   });
 
   const watchedFields = useWatch({
