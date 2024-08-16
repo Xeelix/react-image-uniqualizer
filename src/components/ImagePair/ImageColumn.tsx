@@ -7,7 +7,7 @@ interface ImageColumnProps {
 
 const ImageColumn: React.FC<ImageColumnProps> = ({ title, src }) => (
   <div className='w-1/2 px-2'>
-    <h2 className='text-xl font-semibold mb-2'>{title}</h2>
+    <h2 className='text-xl font-semibold mb-2 text-center'>{title}</h2>
     <img
       src={src}
       alt={title}

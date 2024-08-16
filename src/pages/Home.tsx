@@ -3,9 +3,12 @@ import ImageViewer from "../components/ImageViewer/ImageViewer";
 import { Container } from "../components/Container/Container";
 import { useImageStore } from "../store/ImageStore";
 import UniqualizationSettings from "../components/UniqualizationSettings/UniqualizationSettings";
+import { processImages } from "../utils/imageProcessing";
+import { useRef } from "react";
 
 function Home() {
-  const { setImages } = useImageStore();
+  const { setImages, images, settings, setSettings, updateProcessedImage } = useImageStore();
+  const isProcessing = useRef(false);
 
   const handleImageUpload = (files: File[]) => {
     const validFiles = files.slice(0, 10);
@@ -14,6 +17,7 @@ function Home() {
       processed: URL.createObjectURL(file),
     }));
     setImages(newImages);
+    processImages(newImages, settings, setSettings, updateProcessedImage, isProcessing);
   };
 
   return (
@@ -28,7 +32,6 @@ function Home() {
 
           <UniqualizationSettings />
         </div>
-
 
         <div>
           <ImageViewer />
