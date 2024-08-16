@@ -1,73 +1,42 @@
-import JSZip from "jszip";
 import { ImagePairInterface, UniqualizationSettingsForm } from "../types";
-import { processImages } from "./imageProcessing";
+import { generateImageName, generateNamesList } from "./naming";
+import JSZip from "jszip";
 
-export const uniqualizeImages = async (
+export async function uniqualizeImages(
   images: ImagePairInterface[],
   settings: UniqualizationSettingsForm,
   setIsProcessing: (isProcessing: boolean) => void
-): Promise<Blob> => {
-  const zip = new JSZip();
-  const processedImages: { copy: number; index: number; blob: Blob; name: string }[] = [];
-
+): Promise<Blob> {
   setIsProcessing(true);
 
-  for (let copy = 1; copy <= settings.copies; copy++) {
-    const imageCopy = images.map((img) => ({
-      original: img.original,
-      processed: img.original,
-      name: img.name
-    }));
-    const processedCopy = await processImages(imageCopy, settings);
+  const zip = new JSZip();
+  const processedNames: string[] = [];
 
-    const promises = processedCopy.map(async (image, index) => {
+  for (let i = 0; i < settings.copies; i++) {
+    for (let j = 0; j < images.length; j++) {
+      const image = images[j];
+      const newName = generateImageName(image.name, i * images.length + j, settings);
+      processedNames.push(newName);
+
       const response = await fetch(image.processed);
       const blob = await response.blob();
-      processedImages.push({ copy, index, blob, name: image.name });
-    });
 
-    await Promise.all(promises);
+      if (settings.folderSrtucture === "oneFolder") {
+        zip.file(newName, blob);
+      } else if (settings.folderSrtucture === "subfolders") {
+        zip.folder(`copy_${i + 1}`)?.file(newName, blob);
+      } else if (settings.folderSrtucture === "eachFolder") {
+        zip.folder(`image_${j + 1}`)?.file(newName, blob);
+      }
+    }
   }
 
-  addImagesToZip(processedImages, zip, settings.folderSrtucture);
+  if (settings.saveNamesList) {
+    const namesList = generateNamesList(processedNames);
+    zip.file("names_list.txt", namesList);
+  }
 
+  const content = await zip.generateAsync({ type: "blob" });
   setIsProcessing(false);
-
-  return zip.generateAsync({ type: "blob" });
-};
-
-const addImagesToZip = (
-  processedImages: { copy: number; index: number; blob: Blob; name: string }[],
-  zip: JSZip,
-  folderStructure: UniqualizationSettingsForm["folderSrtucture"]
-) => {
-  const copyCount = Math.max(...processedImages.map((img) => img.copy));
-  console.log(processedImages);
-
-  processedImages.forEach(({ copy, index, blob, name }) => {
-    const fileName = `image_${index + 1}.jpg`;
-
-    switch (folderStructure) {
-      case "oneFolder":
-        zip.file(`processed_image_${index + 1}_${copy}.jpg`, blob);
-        break;
-      case "subfolders":
-        zip.file(`image_${index + 1}/${fileName}_copy_${copy}.jpg`, blob);
-        break;
-      case "eachFolder":
-        for (let i = 1; i <= copyCount; i++) {
-          if (i === copy) {
-            zip.file(`copy_${i}/${fileName}`, blob);
-          } else {
-            const placeholderImage = processedImages.find(
-              (img) => img.index === index && img.copy === i
-            );
-            if (placeholderImage) {
-              zip.file(`copy_${i}/${fileName}`, placeholderImage.blob);
-            }
-          }
-        }
-        break;
-    }
-  });
-};
+  return content;
+}
