@@ -3,7 +3,7 @@ import ImageViewer from "../components/ImageViewer/ImageViewer";
 import { Container } from "../components/Container/Container";
 import { useImageStore } from "../store/ImageStore";
 import UniqualizationSettings from "../components/UniqualizationSettings/UniqualizationSettings";
-import { processImages } from "../utils/imageProcessing";
+import { processImage } from "../utils/imageProcessing";
 import { useState } from "react";
 import { CustomLoader } from "../components/CustomLoader";
 import { uniqualizeImages } from "../utils/uniqualization";
@@ -20,11 +20,25 @@ function Home() {
       name: file.name,
     }));
 
-    // Process the new images
-    const processedImages = await processImages(newImages, settings);
+    setImages(newImages);
 
-    // Update the state with the processed images
-    setImages(processedImages);
+    // Process the first image immediately after upload
+    if (newImages.length > 0) {
+      const firstImage = newImages[0];
+
+      const img = new Image();
+      img.src = firstImage.original;
+      await new Promise((resolve) => {
+        img.onload = resolve;
+      });
+
+      const processedImageSrc = await processImage(img, settings);
+      const updatedImages = newImages.map((image, index) =>
+        index === 0 ? { ...image, processed: processedImageSrc } : image
+      );
+
+      setImages(updatedImages);
+    }
   };
 
   const handleUniqualization = async () => {

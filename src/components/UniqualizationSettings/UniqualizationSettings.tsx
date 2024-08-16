@@ -10,12 +10,13 @@ import BrightnessSettings from "./BrightnessSettings";
 import ContrastSettings from "./ContrastSettings";
 import ReflectionSettings from "./ReflectionSettings";
 import NoiseSettings from "./NoiseSettings";
-import { processImages } from "../../utils/imageProcessing";
+import { processImage } from "../../utils/imageProcessing";
 import MetadataSettings from "./MetadataSettings";
 import NamingSettings from "./NamingSettings";
 
 const UniqualizationSettings: React.FC = () => {
-  const { images, settings, setSettings, setImages } = useImageStore();
+  const { images, settings, setSettings, setImages, currentIndex } =
+    useImageStore();
   const isProcessing = useRef(false);
   const { control, handleSubmit } = useForm<UniqualizationSettingsForm>({
     defaultValues: settings,
@@ -57,23 +58,40 @@ const UniqualizationSettings: React.FC = () => {
   ]);
 
   useEffect(() => {
-    const processAndSetImages = async (data: UniqualizationSettingsForm) => {
-      if (isProcessing.current) return;
+    const processAndSetImage = async (data: UniqualizationSettingsForm) => {
+      if (isProcessing.current) {
+        console.log("Already processing image...");
+        return;
+      }
       isProcessing.current = true;
+      console.log("Processing image...", settings.noise);
 
       try {
-        const processedImages = await processImages(images, data);
-        setImages(processedImages);
+        const currentImage = images[currentIndex];
+        if (currentImage) {
+          const img = new Image();
+          img.src = currentImage.original;
+          await new Promise((resolve) => {
+            img.onload = resolve;
+          });
+          const processedImageSrc = await processImage(img, data);
+          const updatedImages = [...images];
+          updatedImages[currentIndex] = {
+            ...currentImage,
+            processed: processedImageSrc,
+          };
+          setImages(updatedImages);
+        }
       } catch (error) {
-        console.error("Error processing images: ", error);
+        console.error("Error processing image: ", error);
       } finally {
         isProcessing.current = false;
       }
     };
 
-    handleSubmit((data) => processAndSetImages(data))();
+    handleSubmit((data) => processAndSetImage(data))();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watchedImageViewFields]);
+  }, [watchedImageViewFields, currentIndex]);
 
   return (
     <form className='grid gap-6'>
