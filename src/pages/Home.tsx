@@ -7,6 +7,7 @@ import { processImages } from "../utils/imageProcessing";
 import { useRef, useState } from "react";
 import JSZip from "jszip";
 import { CustomLoader } from "../components/CustomLoader";
+import { uniqualizeImages } from "../utils/uniqualization";
 
 function Home() {
   const { setImages, images, settings } = useImageStore();
@@ -17,8 +18,10 @@ function Home() {
     const newImages = validFiles.map((file) => ({
       original: URL.createObjectURL(file),
       processed: URL.createObjectURL(file),
+      name: file.name,
     }));
 
+    console.log(newImages);
     // Process the new images
     const processedImages = await processImages(newImages, settings);
 
@@ -28,55 +31,17 @@ function Home() {
 
   const handleUniqualization = async () => {
     if (images.length === 0 || isProcessing) return;
-
-    const zip = new JSZip();
-    const processedImages: { copy: number; index: number; blob: Blob }[] = [];
-    console.log("Settings: ", settings);
-
-    setIsProcessing(true);
-    for (let copy = 1; copy <= settings.copies; copy++) {
-      // Create a new copy of the images for each iteration
-      const imageCopy = images.map((img) => ({
-        original: img.original,
-        processed: img.original, // Reset processed to original for each copy
-      }));
-
-      const processedCopy = await processImages(imageCopy, settings);
-
-      const promises = processedCopy.map(async (image, index) => {
-        const response = await fetch(image.processed);
-        const blob = await response.blob();
-
-        processedImages.push({ copy, index, blob });
-      });
-
-      await Promise.all(promises);
+  
+    try {
+      const content = await uniqualizeImages(images, settings, setIsProcessing);
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(content);
+      link.download = "processed_images.zip";
+      link.click();
+    } catch (error) {
+      console.error("Error during uniqualization:", error);
+      setIsProcessing(false);
     }
-
-    // Add processed images to the zip file
-    processedImages.forEach(({ copy, index, blob }) => {
-      let fileName = `processed_image_${index + 1}.jpg`;
-
-      switch (settings.folderSrtucture) {
-        case "oneFolder":
-          zip.file(`${fileName}_${copy}.jpg`, blob);
-          break;
-        case "subfolders":
-          zip.file(`image_${index + 1}/copy_${copy}.jpg`, blob);
-          break;
-        case "eachFolder":
-          zip.file(`copy_${copy}/image_${index + 1}.jpg`, blob);
-          break;
-      }
-    });
-
-    setIsProcessing(false);
-
-    const content = await zip.generateAsync({ type: "blob" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(content);
-    link.download = "processed_images.zip";
-    link.click();
   };
 
   return (

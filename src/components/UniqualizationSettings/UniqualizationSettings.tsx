@@ -16,7 +16,7 @@ import MetadataSettings from "./MetadataSettings";
 const UniqualizationSettings: React.FC = () => {
   const { images, settings, setSettings, setImages } = useImageStore();
   const isProcessing = useRef(false);
-  const { control, handleSubmit, reset } = useForm<UniqualizationSettingsForm>({
+  const { control, handleSubmit } = useForm<UniqualizationSettingsForm>({
     defaultValues: settings,
   });
 

@@ -1,4 +1,4 @@
-import { UniqualizationSettingsForm } from "../types";
+import { ImagePairInterface, UniqualizationSettingsForm } from "../types";
 import { applyRotation } from "./applyRotation";
 import { applyCrop } from "./applyCrop";
 import { applySaturation } from "./applySaturation";
@@ -33,9 +33,9 @@ const loadImage = (src: string): Promise<HTMLImageElement> => {
 };
 
 export const processImages = async (
-  images: { original: string; processed: string }[],
+  images: ImagePairInterface[],
   settings: UniqualizationSettingsForm
-): Promise<{ original: string; processed: string }[]> => {
+): Promise<ImagePairInterface[]> => {
   const processedImages = [];
 
   for (let i = 0; i < images.length; i++) {
@@ -47,7 +47,8 @@ export const processImages = async (
     const processedImage = await processImage(img, settings);
     processedImages.push({
       original: images[i].original,
-      processed: processedImage
+      processed: processedImage,
+      name: images[i].name
     });
   }
 

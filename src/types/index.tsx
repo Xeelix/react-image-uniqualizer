@@ -1,6 +1,7 @@
 export interface ImagePairInterface {
   original: string;
   processed: string;
+  name: string;
 }
 
 export interface UniqualizationSettingsForm {
