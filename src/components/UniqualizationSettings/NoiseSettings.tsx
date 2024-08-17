@@ -37,18 +37,13 @@ const NoiseSettings: React.FC<NoiseSettingsProps> = ({ control }) => {
               inputType='number'
               value={field.value}
               onChange={field.onChange}
-              min={0}
+              min={0.1}
               max={1}
               step={0.1}
             />
           )}
         />
       </div>
-
-      {/* <label className='col-span-2 text-sm text-gray-400'>
-        Выбирается 1 значение. При генерации берется случайное число от
-        минимального значения до максимального.
-      </label> */}
     </div>
   );
 };
