@@ -25,7 +25,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   loadingText = "Loading...",
 }) => {
   const baseClasses =
-    "rounded-md inline-flex items-center gap-2 transition-colors duration-200";
+    "rounded-lg inline-flex items-center gap-2 transition-colors duration-200";
   const variantClasses = {
     default: "py-2 px-4 bg-primary hover:bg-primary-dark text-white",
     underline: "text-primary hover:underline focus:outline-none bg-transparent",
