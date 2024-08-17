@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import CustomButton from "../CustomInputs/CustomButton";
 
 interface FAQPopupProps {
@@ -7,19 +7,40 @@ interface FAQPopupProps {
 
 const FAQPopup: React.FC<FAQPopupProps> = ({ onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  const handleClose = useCallback(() => {
+    setIsVisible(false);
+    setTimeout(onClose, 300);
+  }, [onClose]);
 
   useEffect(() => {
     setIsVisible(true);
-  }, []);
 
-  const handleClose = () => {
-    setIsVisible(false);
-    setTimeout(onClose, 300); // Match the duration of the transition
-  };
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        handleClose();
+      }
+    };
+
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('keydown', handleEscapeKey);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [handleClose]);
 
   return (
     <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-      <div className={`bg-white p-6 rounded-lg max-w-2xl transform transition-transform duration-300 ${isVisible ? 'scale-100' : 'scale-90'}`}>
+      <div ref={popupRef} className={`bg-white p-6 rounded-lg max-w-2xl transform transition-transform duration-300 ${isVisible ? 'scale-100' : 'scale-90'}`}>
         <h2 className='text-xl font-bold mb-4'>
           Режимы сохранения уникальных изображений
         </h2>

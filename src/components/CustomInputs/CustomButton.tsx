@@ -32,7 +32,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
     primary: "py-2 px-4 bg-primary hover:bg-primary-dark text-white",
   };
   const disabledClasses =
-    "bg-gray-500 text-gray-600 cursor-not-allowed hover:bg-gray-500";
+    "!bg-gray-500 text-gray-600 cursor-not-allowed !hover:bg-gray-500";
   const widthClass = fullWidth ? "w-full" : "";
 
   const buttonClasses = `

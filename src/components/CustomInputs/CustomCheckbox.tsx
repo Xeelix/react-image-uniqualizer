@@ -11,14 +11,14 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
 }) => {
   return (
     <div
-      className={`w-5 h-5 border-2 rounded-md cursor-pointer flex items-center justify-center ${
+      className={`w-5 h-5 border-2 rounded-md cursor-pointer flex items-center justify-center transition-colors duration-100 ${
         checked ? "bg-primary border-primary" : "border-gray-300"
       }`}
       onClick={() => onChange(!checked)}
     >
       {checked && (
         <svg
-          className='w-3 h-3 text-white'
+          className='w-3 h-3 text-white transform transition-transform duration-100 scale-100'
           viewBox='0 0 20 20'
           fill='currentColor'
         >
