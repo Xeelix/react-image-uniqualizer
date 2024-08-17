@@ -6,7 +6,8 @@ import JSZip from "jszip";
 export async function uniqualizeImages(
   images: ImagePairInterface[],
   settings: UniqualizationSettingsForm,
-  setIsProcessing: (isProcessing: boolean) => void
+  setIsProcessing: (isProcessing: boolean) => void,
+  setProcessingProgress: (progress: { current: number; total: number }) => void
 ): Promise<Blob> {
   setIsProcessing(true);
 
@@ -15,6 +16,7 @@ export async function uniqualizeImages(
 
   const timeStart = performance.now();
 
+  let processedCount = 0;
   for (let i = 0; i < settings.copies; i++) {
     for (let j = 0; j < images.length; j++) {
       const image = images[j];
@@ -44,6 +46,12 @@ export async function uniqualizeImages(
       } else if (settings.folderStructure === "eachFolder") {
         zip.folder(`image_${j + 1}`)?.file(newName, blob);
       }
+
+      processedCount++;
+      setProcessingProgress({
+        current: processedCount,
+        total: images.length * settings.copies,
+      });
     }
   }
 

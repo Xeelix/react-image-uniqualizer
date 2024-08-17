@@ -11,6 +11,10 @@ import CustomButton from "../components/CustomInputs/CustomButton";
 function ImageUniqualization() {
   const { setImages, images, settings } = useImageStore();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [processingProgress, setProcessingProgress] = useState({
+    current: 0,
+    total: 0,
+  });
 
   const handleImageUpload = async (files: File[]) => {
     const validFiles = files.slice(0, 10);
@@ -45,7 +49,16 @@ function ImageUniqualization() {
     if (images.length === 0 || isProcessing) return;
 
     try {
-      const content = await uniqualizeImages(images, settings, setIsProcessing);
+      setProcessingProgress({
+        current: 0,
+        total: images.length * settings.copies,
+      });
+      const content = await uniqualizeImages(
+        images,
+        settings,
+        setIsProcessing,
+        setProcessingProgress
+      );
       const link = document.createElement("a");
       link.href = URL.createObjectURL(content);
       link.download = "processed_images.zip";
@@ -80,7 +93,7 @@ function ImageUniqualization() {
             variant='primary'
             disabled={images.length === 0 || isProcessing}
             isLoading={isProcessing}
-            loadingText='Обработка...'
+            loadingText={`Обработка ${processingProgress.current} / ${processingProgress.total}`}
           />
         </div>
       </Container>
