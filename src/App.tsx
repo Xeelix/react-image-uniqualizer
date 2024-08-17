@@ -1,7 +1,7 @@
-import Home from "./pages/Home";
+import ImageUniqualization from "./pages/ImageUniqualization";
 
 function App() {
-  return <Home />;
+  return <ImageUniqualization />;
 }
 
 export default App;

@@ -8,7 +8,7 @@ import { useState } from "react";
 import { CustomLoader } from "../components/CustomLoader";
 import { uniqualizeImages } from "../utils/uniqualization";
 
-function Home() {
+function ImageUniqualization() {
   const { setImages, images, settings } = useImageStore();
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -98,4 +98,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default ImageUniqualization;
