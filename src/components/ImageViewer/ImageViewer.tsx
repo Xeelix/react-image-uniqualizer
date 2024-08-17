@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import ImageThumbnail from "./ImageThumbnail";
-import ImagePair from "../ImagePair/ImagePair";
-import EmptyImagePair from "../ImagePair/EmptyImagePair";
+import ImagePairDisplay from "../ImagePairDisplay/ImagePairDisplay";
 import FullScreenComparison from "./FullScreenComparison";
 import { useImageStore } from "../../store/ImageStore";
 
@@ -21,15 +20,11 @@ const ImageViewer: React.FC = () => {
 
   return (
     <div className='mt-8'>
-      {images.length === 0 ? (
-        <EmptyImagePair />
-      ) : currentImage ? (
-        <ImagePair
-          original={currentImage.original}
-          processed={currentImage.processed}
-          onClick={toggleFullScreen}
-        />
-      ) : null}
+      <ImagePairDisplay
+        original={currentImage?.original || null}
+        processed={currentImage?.processed || null}
+        onClick={toggleFullScreen}
+      />
       {!isFullScreen && (
         <div className='flex justify-center overflow-x-auto py-2'>
           {images.map((image, index) => (
