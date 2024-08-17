@@ -89,7 +89,7 @@ function ImageUniqualization() {
         <div className='mt-4 flex justify-end'>
           <CustomButton
             onClick={handleUniqualization}
-            label='Уникализировать и скачать'
+            label='Уникализировать'
             variant='primary'
             disabled={images.length === 0 || isProcessing}
             isLoading={isProcessing}
