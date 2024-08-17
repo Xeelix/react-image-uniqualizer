@@ -1,5 +1,4 @@
 import React from "react";
-import clsx from "clsx";
 
 interface ImageThumbnailProps {
   src: string;
@@ -12,14 +11,11 @@ const ImageThumbnail: React.FC<ImageThumbnailProps> = ({
   isSelected,
   onClick,
 }) => {
+  const baseClasses = "w-20 h-20 flex-shrink-0 mr-2 cursor-pointer border-2";
+  const borderClass = isSelected ? "border-blue-500" : "border-transparent";
+
   return (
-    <div
-      className={clsx(
-        "w-20 h-20 flex-shrink-0 mr-2 cursor-pointer border-2",
-        isSelected ? "border-blue-500" : "border-transparent"
-      )}
-      onClick={onClick}
-    >
+    <div className={`${baseClasses} ${borderClass}`} onClick={onClick}>
       <img src={src} alt='Thumbnail' className='w-full h-full object-cover' />
     </div>
   );
