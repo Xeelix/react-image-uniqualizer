@@ -75,7 +75,7 @@ export const CustomDropdown: React.FC<DropdownSelectProps> = ({
           readOnly
           className='w-full h-full px-3 text-lg focus:outline-none rounded-lg cursor-pointer bg-transparent text-gray-400'
         />
-        <div className='absolute right-1 h-full flex flex-col justify-center pointer-events-none'>
+        <div className='absolute right-1 h-full flex flex-col justify-center pointer-events-none bg-white'>
           {isOpen ? (
             <IconChevronUp size={20} stroke={3} className='text-[#97A5BD]' />
           ) : (

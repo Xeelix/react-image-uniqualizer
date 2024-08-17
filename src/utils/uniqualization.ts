@@ -1,5 +1,5 @@
 import { ImagePairInterface, UniqualizationSettingsForm } from "../types";
-import { generateImageName, generateNamesList } from "./naming";
+import { generateFileName, generateNamesList } from "./fileNaming";
 import { processImage } from "./imageProcessing";
 import JSZip from "jszip";
 
@@ -18,7 +18,7 @@ export async function uniqualizeImages(
   for (let i = 0; i < settings.copies; i++) {
     for (let j = 0; j < images.length; j++) {
       const image = images[j];
-      const newName = generateImageName(
+      const newName = generateFileName(
         image.name,
         i * images.length + j,
         settings

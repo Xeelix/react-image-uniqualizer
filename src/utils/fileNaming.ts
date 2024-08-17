@@ -10,7 +10,7 @@ function generateHash(length: number): string {
   return result;
 }
 
-export function generateImageName(
+export function generateFileName(
   originalName: string,
   index: number,
   settings: UniqualizationSettingsForm
