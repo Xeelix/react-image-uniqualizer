@@ -1,50 +1,47 @@
-# React + TypeScript + Vite
+# React Image Uniqualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+React Image Uniqualizer is a web application that allows users to upload images and apply various transformations to make each image unique. The application is built using React, TypeScript, and Vite
 
-Currently, two official plugins are available:
+## Key Features
+- **Image Upload**: Upload multiple images at once.
+- **Image Processing**: Apply transformations such as rotation, cropping, saturation, brightness, contrast, reflection, and noise.
+- **Custom Naming**: Generate unique filenames based on different naming conventions.
+- **Download**: Download processed images as a ZIP archive.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Key Libraries
+- **React**: A JavaScript library for building user interfaces.
+- **TypeScript**: A strongly typed programming language that builds on JavaScript.
+- **Vite**: A build tool that provides a fast development environment.
+- **Zustand**: A small, fast, and scalable state-management solution.
+- **JSZip**: A library for creating, reading, and editing .zip files.
+- **React Hook Form**: A library for managing form state and validation.
+- **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
 
-## Expanding the ESLint configuration
+## Installation
+1. Clone the repository:
+2. Navigate to the project directory:
+   ```sh
+   cd react-image-uniqualizer
+   ```
+3. Install dependencies:
+   ```sh
+   npm install
+   ```
+4. Start the development server:
+   ```sh
+   npm run dev
+   ```
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Project Structure
+- **src/**: Contains the source code.
+  - **components/**: Reusable UI components.
+  - **pages/**: Page components.
+  - **store/**: State management using Zustand.
+  - **utils/**: Utility functions for image processing.
+  - **types/**: TypeScript type definitions.
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Usage
+1. Upload images using the upload button.
+2. Configure the desired transformations in the settings panel.
+3. Click the "Uniqualize and Download" button to process and download the images.
