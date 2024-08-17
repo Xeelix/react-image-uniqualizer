@@ -4,6 +4,7 @@ import { UniqualizationSettingsForm } from "../../types";
 import { CustomInput } from "../CustomInputs/CustomInput";
 import { CustomDropdown } from "../CustomInputs/CustomDropdown";
 import FAQPopup from "./FAQPopup";
+import CustomButton from "../CustomInputs/CustomButton";
 
 interface CopiesAndFolderStructureProps {
   control: Control<UniqualizationSettingsForm>;
@@ -58,13 +59,12 @@ const CopiesAndFolderStructure: React.FC<CopiesAndFolderStructureProps> = ({
         )}
       />
       <div className='col-span-2 flex justify-start'>
-        <button
-          className='text-primary cursor-pointer hover:underline focus:outline-none'
+        <CustomButton
+          label='Подробнее в FAQ'
           onClick={toggleFAQ}
-          type='button'
-        >
-          Подробнее в FAQ
-        </button>
+          variant='underline'
+          className='text-left'
+        />
       </div>
       {showFAQ && <FAQPopup onClose={toggleFAQ} />}
     </div>

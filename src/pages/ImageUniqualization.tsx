@@ -7,6 +7,7 @@ import { processImage } from "../utils/imageProcessing";
 import { useState } from "react";
 import { CustomLoader } from "../components/CustomLoader";
 import { uniqualizeImages } from "../utils/uniqualization";
+import CustomButton from "../components/CustomInputs/CustomButton";
 
 function ImageUniqualization() {
   const { setImages, images, settings } = useImageStore();
@@ -74,24 +75,14 @@ function ImageUniqualization() {
         </div>
 
         <div className='mt-4 flex justify-end'>
-          <button
+          <CustomButton
             onClick={handleUniqualization}
-            className={`py-2 px-4 rounded-md transition-colors duration-200 flex items-center justify-center ${
-              images.length === 0 || isProcessing
-                ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                : "bg-primary hover:bg-primary-dark text-white"
-            }`}
+            label='Уникализировать и скачать'
+            variant='primary'
             disabled={images.length === 0 || isProcessing}
-          >
-            {isProcessing ? (
-              <>
-                <CustomLoader className='w-5 h-5 mr-2' />
-                Обработка...
-              </>
-            ) : (
-              "Уникализировать и скачать"
-            )}
-          </button>
+            isLoading={isProcessing}
+            loadingText='Обработка...'
+          />
         </div>
       </Container>
     </div>

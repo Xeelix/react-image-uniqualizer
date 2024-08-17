@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import CustomButton from "../CustomInputs/CustomButton";
 
 interface FAQPopupProps {
   onClose: () => void;
 }
 
 const FAQPopup: React.FC<FAQPopupProps> = ({ onClose }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setTimeout(onClose, 300); // Match the duration of the transition
+  };
+
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
-      <div className='bg-white p-6 rounded-lg max-w-2xl'>
+    <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`bg-white p-6 rounded-lg max-w-2xl transform transition-transform duration-300 ${isVisible ? 'scale-100' : 'scale-90'}`}>
         <h2 className='text-xl font-bold mb-4'>
           Режимы сохранения уникальных изображений
         </h2>
@@ -35,12 +47,7 @@ const FAQPopup: React.FC<FAQPopupProps> = ({ onClose }) => {
           </li>
         </ul>
         <div className='flex justify-end'>
-          <button
-            className='bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark focus:outline-none'
-            onClick={onClose}
-          >
-            Закрыть
-          </button>
+          <CustomButton label='Закрыть' onClick={handleClose} />
         </div>
       </div>
     </div>
