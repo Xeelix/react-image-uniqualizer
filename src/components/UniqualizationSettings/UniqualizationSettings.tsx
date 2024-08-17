@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useImageStore } from "../../store/ImageStore";
 import { UniqualizationSettingsForm } from "../../types";
@@ -48,19 +48,17 @@ const UniqualizationSettings: React.FC = () => {
     ],
   });
 
-  useEffect(() => {
-    handleSubmit((data) => setSettings(data))();
-  }, [
-    handleSubmit,
-    setSettings,
-    watchedImageViewFields,
-    watchedSecondaryFields,
-  ]);
+  const updateSettings = useCallback(
+    (data: UniqualizationSettingsForm) => {
+      setSettings(data);
+    },
+    [setSettings]
+  );
 
-  useEffect(() => {
-    const processAndSetImage = async (data: UniqualizationSettingsForm) => {
+  const processAndSetImage = useCallback(
+    async (data: UniqualizationSettingsForm) => {
+      if (isProcessing.current) return;
       isProcessing.current = true;
-      console.log("Processing image...", settings.noise);
 
       try {
         const currentImage = images[currentIndex];
@@ -83,10 +81,22 @@ const UniqualizationSettings: React.FC = () => {
       } finally {
         isProcessing.current = false;
       }
-    };
+    },
+    [images, currentIndex, setImages]
+  );
 
-    handleSubmit((data) => processAndSetImage(data))();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    handleSubmit(updateSettings)();
+  }, [
+    handleSubmit,
+    updateSettings,
+    watchedImageViewFields,
+    watchedSecondaryFields,
+  ]);
+
+  useEffect(() => {
+    handleSubmit(processAndSetImage)();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchedImageViewFields, currentIndex]);
 
   return (
