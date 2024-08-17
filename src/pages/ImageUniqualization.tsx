@@ -5,7 +5,6 @@ import { useImageStore } from "../store/ImageStore";
 import UniqualizationSettings from "../components/UniqualizationSettings/UniqualizationSettings";
 import { processImage } from "../utils/imageProcessing";
 import { useState } from "react";
-import { CustomLoader } from "../components/CustomLoader";
 import { uniqualizeImages } from "../utils/uniqualization";
 import CustomButton from "../components/CustomInputs/CustomButton";
 
