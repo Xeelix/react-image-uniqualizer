@@ -16,10 +16,10 @@ const processImageWithWorker = async (
   return new Promise<Blob>((resolve, reject) => {
     try {
       const worker = new Worker(
-        new URL('../workers/imageProcessing.worker.ts', import.meta.url),
-        { 
-          type: 'module',
-          credentials: 'same-origin'
+        new URL("../workers/imageProcessing.worker.ts", import.meta.url),
+        {
+          type: "module",
+          credentials: "same-origin",
         }
       );
 
@@ -30,29 +30,26 @@ const processImageWithWorker = async (
           worker.terminate();
           return;
         }
-        
+
         // Проверяем, что blob существует и является Blob
         if (blob instanceof Blob) {
           resolve(blob);
         } else {
-          reject(new Error('Invalid response from worker'));
+          reject(new Error("Invalid response from worker"));
         }
         worker.terminate();
       };
 
       worker.onerror = (err) => {
-        console.error('Worker error:', err);
+        console.error("Worker error:", err);
         reject(err);
         worker.terminate();
       };
 
       // Передаем данные в worker с корректным списком transferable objects
-      worker.postMessage(
-        { imageBitmap, settings }, 
-        [imageBitmap]
-      );
+      worker.postMessage({ imageBitmap, settings }, [imageBitmap]);
     } catch (error) {
-      console.error('Error creating worker:', error);
+      console.error("Error creating worker:", error);
       reject(error);
     }
   });

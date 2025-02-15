@@ -46,7 +46,11 @@ export async function uniqualizeImages(
   images: ImagePairInterface[],
   settings: UniqualizationSettingsForm,
   setIsProcessing: (isProcessing: boolean) => void,
-  setProcessingProgress: (progress: { current: number; total: number; message: string }) => void
+  setProcessingProgress: (progress: {
+    current: number;
+    total: number;
+    message: string;
+  }) => void
 ): Promise<Blob> {
   setIsProcessing(true);
 
@@ -64,34 +68,42 @@ export async function uniqualizeImages(
     const totalCount = images.length * settings.copies;
 
     // Create tasks for each copy of every image
-    const tasks: (() => Promise<void>)[] = Array.from({ length: settings.copies }, (_, i) =>
-      images.map((image, j) => async () => {
-        const fileName = generateFileName(image.name, i * images.length + j, settings);
-        processedNames.push(fileName);
+    const tasks: (() => Promise<void>)[] = Array.from(
+      { length: settings.copies },
+      (_, i) =>
+        images.map((image, j) => async () => {
+          const fileName = generateFileName(
+            image.name,
+            i * images.length + j,
+            settings
+          );
+          processedNames.push(fileName);
 
-        const blob = await processImageBlob(preloadedImages[j], settings);
+          const blob = await processImageBlob(preloadedImages[j], settings);
 
-        let folder: string | null = null;
-        if (settings.folderStructure === "subfolders") {
-          folder = String(i + 1);
-        } else if (settings.folderStructure === "eachFolder") {
-          folder = `image_${j + 1}`;
-        }
+          let folder: string | null = null;
+          if (settings.folderStructure === "subfolders") {
+            folder = String(i + 1);
+          } else if (settings.folderStructure === "eachFolder") {
+            folder = `image_${j + 1}`;
+          }
 
-        zipItems.push({ folder, fileName, blob });
+          zipItems.push({ folder, fileName, blob });
 
-        processedCount++;
-        setProcessingProgress({
-          current: processedCount,
-          total: totalCount,
-          message: "Обработка",
-        });
-      })
+          processedCount++;
+          setProcessingProgress({
+            current: processedCount,
+            total: totalCount,
+            message: "Обработка",
+          });
+        })
     ).flat();
 
     const concurrencyLimit = 10;
     await runWithConcurrencyLimit(tasks, concurrencyLimit);
-    console.log(`Time taken for processing images: ${performance.now() - timeStart}ms`);
+    console.log(
+      `Time taken for processing images: ${performance.now() - timeStart}ms`
+    );
 
     let namesList: string | undefined;
     if (settings.saveNamesList) {
@@ -100,7 +112,10 @@ export async function uniqualizeImages(
 
     // Use a web worker to create the ZIP archive so the UI remains responsive.
     return new Promise<Blob>((resolve, reject) => {
-      const worker = new Worker(new URL("../workers/zip.worker.ts", import.meta.url), { type: "module" });
+      const worker = new Worker(
+        new URL("../workers/zip.worker.ts", import.meta.url),
+        { type: "module" }
+      );
 
       worker.onmessage = (event: MessageEvent) => {
         const data = event.data;
@@ -138,7 +153,11 @@ export async function uniqualizeImages(
         total: 100,
         message: "Архивирование",
       });
-      worker.postMessage({ files: zipItems, saveNames: settings.saveNamesList, namesList });
+      worker.postMessage({
+        files: zipItems,
+        saveNames: settings.saveNamesList,
+        namesList,
+      });
     });
   } catch (error) {
     setIsProcessing(false);
