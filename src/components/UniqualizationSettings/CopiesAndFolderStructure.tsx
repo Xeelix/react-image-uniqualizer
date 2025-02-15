@@ -39,7 +39,7 @@ const CopiesAndFolderStructure: React.FC<CopiesAndFolderStructureProps> = ({
             inputType='number'
             value={field.value}
             onChange={field.onChange}
-            max={30}
+            max={100}
             placeholder='1'
           />
         )}
