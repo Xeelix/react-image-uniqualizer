@@ -1,7 +1,6 @@
 import { ImagePairInterface, UniqualizationSettingsForm } from "../types";
 import { generateFileName, generateNamesList } from "./fileNaming";
 import { processImageBlob } from "./imageProcessing";
-import JSZip from "jszip";
 
 // Оптимизированная версия runWithConcurrencyLimit
 const runWithConcurrencyLimit = async <T>(
@@ -10,22 +9,19 @@ const runWithConcurrencyLimit = async <T>(
 ): Promise<T[]> => {
   const results: T[] = [];
   const executing: Promise<void>[] = [];
-  const pool = new Set();
+  const pool = new Set<Promise<void>>();
 
   for (const [index, task] of tasks.entries()) {
     const p = Promise.resolve().then(async () => {
       results[index] = await task();
       pool.delete(p);
     });
-    
     pool.add(p);
     executing.push(p);
-    
     if (pool.size >= limit) {
       await Promise.race(pool);
     }
   }
-  
   await Promise.all(executing);
   return results;
 };
@@ -40,76 +36,110 @@ const loadImage = (src: string): Promise<HTMLImageElement> => {
   });
 };
 
+interface ZipItem {
+  folder: string | null;
+  fileName: string;
+  blob: Blob;
+}
+
 export async function uniqualizeImages(
   images: ImagePairInterface[],
   settings: UniqualizationSettingsForm,
   setIsProcessing: (isProcessing: boolean) => void,
-  setProcessingProgress: (progress: { current: number; total: number }) => void
+  setProcessingProgress: (progress: { current: number; total: number; message: string }) => void
 ): Promise<Blob> {
   setIsProcessing(true);
 
   try {
-    // Предварительно загружаем все изображения один раз
     const preloadedImages = await Promise.all(
-      images.map(image => loadImage(image.original))
+      images.map((image) => loadImage(image.original))
     );
 
-    // Создаем ImageBitmap из загруженных изображений
-    const imageBitmaps = await Promise.all(
-      preloadedImages.map(img => createImageBitmap(img))
-    );
-
-    const zip = new JSZip();
+    // Prepare arrays for processed file info and names list
+    const zipItems: ZipItem[] = [];
     const processedNames: string[] = [];
     const timeStart = performance.now();
 
     let processedCount = 0;
     const totalCount = images.length * settings.copies;
 
-    // Оптимизированное создание задач
-    const tasks = Array.from({ length: settings.copies }, (_, i) =>
+    // Create tasks for each copy of every image
+    const tasks: (() => Promise<void>)[] = Array.from({ length: settings.copies }, (_, i) =>
       images.map((image, j) => async () => {
-        const newName = generateFileName(image.name, i * images.length + j, settings);
-        processedNames.push(newName);
+        const fileName = generateFileName(image.name, i * images.length + j, settings);
+        processedNames.push(fileName);
 
         const blob = await processImageBlob(preloadedImages[j], settings);
 
-        if (settings.folderStructure === "oneFolder") {
-          zip.file(newName, blob);
-        } else if (settings.folderStructure === "subfolders") {
-          zip.folder(`${i + 1}`)?.file(newName, blob);
+        let folder: string | null = null;
+        if (settings.folderStructure === "subfolders") {
+          folder = String(i + 1);
         } else if (settings.folderStructure === "eachFolder") {
-          zip.folder(`image_${j + 1}`)?.file(newName, blob);
+          folder = `image_${j + 1}`;
         }
+
+        zipItems.push({ folder, fileName, blob });
 
         processedCount++;
         setProcessingProgress({
           current: processedCount,
           total: totalCount,
+          message: "Обработка",
         });
       })
     ).flat();
 
-    // Используем оптимальное количество параллельных задач
     const concurrencyLimit = 10;
-
-    console.log("concurrencyLimit", concurrencyLimit);
-    
     await runWithConcurrencyLimit(tasks, concurrencyLimit);
+    console.log(`Time taken for processing images: ${performance.now() - timeStart}ms`);
 
-    console.log(`Time taken: ${performance.now() - timeStart}ms`);
-
+    let namesList: string | undefined;
     if (settings.saveNamesList) {
-      zip.file("names_list.txt", generateNamesList(processedNames));
+      namesList = generateNamesList(processedNames);
     }
 
-    const content = await zip.generateAsync({ 
-      type: "blob",
-      compression: "STORE" // Используем STORE вместо DEFLATE для скорости
+    // Use a web worker to create the ZIP archive so the UI remains responsive.
+    return new Promise<Blob>((resolve, reject) => {
+      const worker = new Worker(new URL("../workers/zip.worker.ts", import.meta.url), { type: "module" });
+
+      worker.onmessage = (event: MessageEvent) => {
+        const data = event.data;
+        if (data.error) {
+          setIsProcessing(false);
+          reject(new Error(data.error));
+          worker.terminate();
+        } else if (data.blob) {
+          setProcessingProgress({
+            current: 100,
+            total: 100,
+            message: "Архивирование завершено",
+          });
+          setIsProcessing(false);
+          resolve(data.blob);
+          worker.terminate();
+        } else if (data.progress) {
+          setProcessingProgress({
+            current: parseFloat(data.progress),
+            total: 100,
+            message: "Архивирование",
+          });
+        }
+      };
+
+      worker.onerror = (err) => {
+        setIsProcessing(false);
+        reject(err);
+        worker.terminate();
+      };
+
+      // Start archival process (update UI to show archiving step)
+      setProcessingProgress({
+        current: 0,
+        total: 100,
+        message: "Архивирование",
+      });
+      worker.postMessage({ files: zipItems, saveNames: settings.saveNamesList, namesList });
     });
-    
-    setIsProcessing(false);
-    return content;
   } catch (error) {
     setIsProcessing(false);
     throw error;

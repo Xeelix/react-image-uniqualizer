@@ -17,7 +17,6 @@ interface UniqualizationSettingsForm {
   brightness?: { enabled: boolean; min: number; max: number };
   contrast?: { enabled: boolean; min: number; max: number };
   saturation?: { enabled: boolean; min: number; max: number };
-  // other properties as needed…
   [key: string]: any;
 }
 

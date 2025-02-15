@@ -14,6 +14,7 @@ function ImageUniqualization() {
   const [processingProgress, setProcessingProgress] = useState({
     current: 0,
     total: 0,
+    message: "Обработка",
   });
 
   const handleImageUpload = async (files: File[]) => {
@@ -52,6 +53,7 @@ function ImageUniqualization() {
       setProcessingProgress({
         current: 0,
         total: images.length * settings.copies,
+        message: "Обработка",
       });
       const content = await uniqualizeImages(
         images,
@@ -93,7 +95,7 @@ function ImageUniqualization() {
             variant='primary'
             disabled={images.length === 0 || isProcessing}
             isLoading={isProcessing}
-            loadingText={`Обработка ${processingProgress.current} / ${processingProgress.total}`}
+            loadingText={`${processingProgress.message}: ${processingProgress.current} / ${processingProgress.total}`}
           />
         </div>
       </Container>
