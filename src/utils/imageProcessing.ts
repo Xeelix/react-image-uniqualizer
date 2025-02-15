@@ -1,9 +1,7 @@
 import { ImagePairInterface, UniqualizationSettingsForm } from "../types";
 import { applyRotation } from "./applyRotation";
 import { applyCrop } from "./applyCrop";
-import { applySaturation } from "./applySaturation";
-import { applyBrightness } from "./applyBrightness";
-import { applyContrast } from "./applyContrast";
+import { applyFilters } from "./applyFilters";
 import { applyReflection } from "./applyReflection";
 import { applyNoise } from "./applyNoise";
 
@@ -19,24 +17,38 @@ export const processImage = async (
   img: HTMLImageElement,
   settings: UniqualizationSettingsForm
 ): Promise<string> => {
-  let processedImage = img;
+  const canvas = new OffscreenCanvas(img.width, img.height);
+  const ctx = canvas.getContext("2d");
 
-  const processingFunctions = [
-    applyRotation,
-    applyCrop,
-    applySaturation,
-    applyBrightness,
-    applyContrast,
-    applyReflection,
-    applyNoise,
-  ];
-
-  for (const func of processingFunctions) {
-    const processedSrc = await func(processedImage, settings);
-    processedImage = await createImageFromSrc(processedSrc);
+  if (!ctx) {
+    throw new Error("Could not get canvas context");
   }
 
-  return processedImage.src;
+  ctx.drawImage(img, 0, 0);
+
+  // Apply each effect
+  applyReflection(ctx, canvas, settings.reflection);
+
+  if (settings.rotation.enabled) {
+    const angle = settings.rotation.min + 
+      Math.random() * (settings.rotation.max - settings.rotation.min);
+    applyRotation(ctx, canvas, angle);
+  }
+
+  applyFilters(ctx, canvas, settings);
+
+  if (settings.noise.enabled) {
+    applyNoise(ctx, canvas, settings.noise.max);
+  }
+
+  if (settings.crop.enabled) {
+    const cropAmount = settings.crop.min + 
+      Math.floor(Math.random() * (settings.crop.max - settings.crop.min));
+    applyCrop(ctx, canvas, cropAmount, settings.crop.side);
+  }
+
+  const blob = await canvas.convertToBlob({ type: "image/png" });
+  return URL.createObjectURL(blob);
 };
 
 export const processImages = async (

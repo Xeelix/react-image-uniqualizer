@@ -1,28 +1,17 @@
-import { UniqualizationSettingsForm } from '../types';
 
-export const applyRotation = async (image: HTMLImageElement, settings: UniqualizationSettingsForm): Promise<string> => {
-  if (!settings.rotation.enabled) {
-    return image.src;
-  }
+export const applyRotation = (
+  ctx: OffscreenCanvasRenderingContext2D,
+  canvas: OffscreenCanvas,
+  angle: number
+) => {
+  const tempCanvas = new OffscreenCanvas(canvas.width, canvas.height);
+  const tempCtx = tempCanvas.getContext("2d");
+  if (!tempCtx) return;
 
-  const rotationAngle = Math.random() * (settings.rotation.max - settings.rotation.min) + settings.rotation.min;
-
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-
-  if (!ctx) {
-    throw new Error('Could not get canvas context');
-  }
-
-  const width = image.width;
-  const height = image.height;
-
-  canvas.width = width;
-  canvas.height = height;
-
-  ctx.translate(width / 2, height / 2);
-  ctx.rotate((rotationAngle * Math.PI) / 180);
-  ctx.drawImage(image, -width / 2, -height / 2);
-
-  return canvas.toDataURL();
+  tempCtx.translate(canvas.width / 2, canvas.height / 2);
+  tempCtx.rotate((angle * Math.PI) / 180);
+  tempCtx.drawImage(canvas, -canvas.width / 2, -canvas.height / 2);
+  
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(tempCanvas, 0, 0);
 };
