@@ -1,6 +1,6 @@
-export {};
+/// <reference lib="webworker" />
 
-declare const self: DedicatedWorkerGlobalScope;
+declare const self: Worker;
 
 import { applyRotation } from "../utils/applyRotation";
 import { applyCrop } from "../utils/applyCrop";
