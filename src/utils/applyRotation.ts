@@ -1,4 +1,3 @@
-
 export const applyRotation = (
   ctx: OffscreenCanvasRenderingContext2D,
   canvas: OffscreenCanvas,
@@ -11,7 +10,7 @@ export const applyRotation = (
   tempCtx.translate(canvas.width / 2, canvas.height / 2);
   tempCtx.rotate((angle * Math.PI) / 180);
   tempCtx.drawImage(canvas, -canvas.width / 2, -canvas.height / 2);
-  
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(tempCanvas, 0, 0);
 };

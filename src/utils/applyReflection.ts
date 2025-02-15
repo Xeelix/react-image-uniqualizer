@@ -1,4 +1,3 @@
-
 export const applyReflection = (
   ctx: OffscreenCanvasRenderingContext2D,
   canvas: OffscreenCanvas,

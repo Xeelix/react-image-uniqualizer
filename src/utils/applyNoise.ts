@@ -1,4 +1,3 @@
-
 export const applyNoise = (
   ctx: OffscreenCanvasRenderingContext2D,
   canvas: OffscreenCanvas,
@@ -17,7 +16,3 @@ export const applyNoise = (
 
   ctx.putImageData(imageData, 0, 0);
 };
-
-function clamp(value: number): number {
-  return Math.max(0, Math.min(255, value));
-}

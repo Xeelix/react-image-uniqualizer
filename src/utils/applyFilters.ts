@@ -10,21 +10,24 @@ export const applyFilters = (
   settings: FilterSettings
 ) => {
   const filters: string[] = [];
-  
+
   if (settings.brightness?.enabled) {
-    const brightness = settings.brightness.min + 
+    const brightness =
+      settings.brightness.min +
       Math.random() * (settings.brightness.max - settings.brightness.min);
     filters.push(`brightness(${brightness}%)`);
   }
-  
+
   if (settings.contrast?.enabled) {
-    const contrast = settings.contrast.min + 
+    const contrast =
+      settings.contrast.min +
       Math.random() * (settings.contrast.max - settings.contrast.min);
     filters.push(`contrast(${contrast}%)`);
   }
-  
+
   if (settings.saturation?.enabled) {
-    const saturation = settings.saturation.min + 
+    const saturation =
+      settings.saturation.min +
       Math.random() * (settings.saturation.max - settings.saturation.min);
     filters.push(`saturate(${saturation}%)`);
   }
@@ -37,7 +40,7 @@ export const applyFilters = (
 
   tempCtx.filter = filters.join(" ");
   tempCtx.drawImage(canvas, 0, 0);
-  
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(tempCanvas, 0, 0);
-}; 
+};
