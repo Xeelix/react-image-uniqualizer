@@ -6,19 +6,16 @@ export const applyReflection = (
   if (type === "none") return;
 
   ctx.save();
-  
-  let effectiveType = type;
-  if (type === "both") {
-    effectiveType = Math.random() < 0.5 ? "horizontal" : "vertical";
-  }
-  
-  if (effectiveType === "horizontal") {
+
+  if (type === "horizontal" || type === "both") {
     ctx.scale(-1, 1);
-    ctx.drawImage(canvas, -canvas.width, 0);
-  } else if (effectiveType === "vertical") {
-    ctx.scale(1, -1);
-    ctx.drawImage(canvas, 0, -canvas.height);
+    ctx.translate(-canvas.width, 0);
   }
-  
+  if (type === "vertical" || type === "both") {
+    ctx.scale(1, -1);
+    ctx.translate(0, -canvas.height);
+  }
+
+  ctx.drawImage(canvas, 0, 0);
   ctx.restore();
 };
